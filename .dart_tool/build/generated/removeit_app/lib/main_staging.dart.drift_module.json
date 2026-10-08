@@ -1,9 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:flutter/material.dart",
-    "package:removeit_app/app.dart",
-    "package:removeit_app/core/config/env_config.dart",
-    "package:removeit_app/injection_container.dart"
-  ]
-}

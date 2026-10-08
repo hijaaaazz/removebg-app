@@ -1,8 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:purchases_flutter/purchases_flutter.dart",
-    "package:removeit_app/core/config/env_config.dart",
-    "package:removeit_app/features/monetization/domain/entities/subscription_package_entity.dart"
-  ]
-}

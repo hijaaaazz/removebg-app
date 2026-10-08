@@ -1,9 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:flutter/material.dart",
-    "package:go_router/go_router.dart",
-    "package:removeit_app/core/services/haptic_service.dart",
-    "package:removeit_app/core/theme/app_colors.dart"
-  ]
-}

@@ -1,7 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:equatable/equatable.dart",
-    "package:removeit_app/features/monetization/domain/entities/subscription_package_entity.dart"
-  ]
-}

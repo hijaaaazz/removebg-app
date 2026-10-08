@@ -1,8 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:flutter/material.dart",
-    "package:google_fonts/google_fonts.dart",
-    "package:removeit_app/core/theme/app_colors.dart"
-  ]
-}

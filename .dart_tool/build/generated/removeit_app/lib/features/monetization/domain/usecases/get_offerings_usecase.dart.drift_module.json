@@ -1,9 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:fpdart/fpdart.dart",
-    "package:removeit_app/core/error/failures.dart",
-    "package:removeit_app/features/monetization/domain/entities/subscription_package_entity.dart",
-    "package:removeit_app/features/monetization/domain/repositories/monetization_repository.dart"
-  ]
-}

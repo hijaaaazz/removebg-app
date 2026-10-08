@@ -1,6 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:removeit_app/core/config/env_config.dart"
-  ]
-}

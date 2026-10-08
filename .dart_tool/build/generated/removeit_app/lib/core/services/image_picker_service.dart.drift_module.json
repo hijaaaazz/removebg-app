@@ -1,6 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:image_picker/image_picker.dart"
-  ]
-}

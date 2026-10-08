@@ -1,7 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:dio/dio.dart",
-    "package:removeit_app/core/error/failures.dart"
-  ]
-}

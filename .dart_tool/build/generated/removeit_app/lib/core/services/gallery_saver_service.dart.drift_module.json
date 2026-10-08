@@ -1,8 +1,0 @@
-{
-  "elements": {},
-  "imports": [
-    "package:flutter/material.dart",
-    "package:gal/gal.dart",
-    "package:path_provider/path_provider.dart"
-  ]
-}
