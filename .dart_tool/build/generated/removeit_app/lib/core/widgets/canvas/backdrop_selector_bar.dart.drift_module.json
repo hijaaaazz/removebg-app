@@ -1,0 +1,10 @@
+{
+  "elements": {},
+  "imports": [
+    "package:flutter/material.dart",
+    "package:image_picker/image_picker.dart",
+    "package:removeit_app/core/services/haptic_service.dart",
+    "package:removeit_app/core/theme/app_colors.dart",
+    "package:removeit_app/features/studio_canvas/presentation/bloc/studio_canvas_cubit.dart"
+  ]
+}

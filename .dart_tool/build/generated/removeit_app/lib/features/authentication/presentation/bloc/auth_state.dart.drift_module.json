@@ -1,0 +1,7 @@
+{
+  "elements": {},
+  "imports": [
+    "package:equatable/equatable.dart",
+    "package:removeit_app/features/authentication/domain/entities/user_entity.dart"
+  ]
+}

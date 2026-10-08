@@ -72,3 +72,6 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+
+dependency_overrides:
+  path_provider_foundation: 2.4.0

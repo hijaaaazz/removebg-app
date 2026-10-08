@@ -1,0 +1,9 @@
+{
+  "elements": {},
+  "imports": [
+    "package:flutter_secure_storage/flutter_secure_storage.dart",
+    "package:shared_preferences/shared_preferences.dart",
+    "package:removeit_app/core/constants/storage_keys.dart",
+    "package:removeit_app/features/authentication/data/models/user_model.dart"
+  ]
+}

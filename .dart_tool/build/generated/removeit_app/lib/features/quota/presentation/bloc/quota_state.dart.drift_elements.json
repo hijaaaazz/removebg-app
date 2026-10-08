@@ -1,0 +1,1 @@
+{"valid_import":true,"imports":[{"uri":"package:equatable/equatable.dart","transitive":false},{"uri":"package:removeit_app/features/quota/domain/entities/user_quota_entity.dart","transitive":false}],"elements":[]}

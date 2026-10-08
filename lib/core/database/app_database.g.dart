@@ -1,0 +1,898 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'app_database.dart';
+
+// ignore_for_file: type=lint
+class $JobHistoryTableTable extends JobHistoryTable
+    with TableInfo<$JobHistoryTableTable, JobHistoryTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $JobHistoryTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _originalLocalPathMeta = const VerificationMeta(
+    'originalLocalPath',
+  );
+  @override
+  late final GeneratedColumn<String> originalLocalPath =
+      GeneratedColumn<String>(
+        'original_local_path',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _previewRemoteUrlMeta = const VerificationMeta(
+    'previewRemoteUrl',
+  );
+  @override
+  late final GeneratedColumn<String> previewRemoteUrl = GeneratedColumn<String>(
+    'preview_remote_url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cleanRemoteUrlMeta = const VerificationMeta(
+    'cleanRemoteUrl',
+  );
+  @override
+  late final GeneratedColumn<String> cleanRemoteUrl = GeneratedColumn<String>(
+    'clean_remote_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _widthMeta = const VerificationMeta('width');
+  @override
+  late final GeneratedColumn<int> width = GeneratedColumn<int>(
+    'width',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _heightMeta = const VerificationMeta('height');
+  @override
+  late final GeneratedColumn<int> height = GeneratedColumn<int>(
+    'height',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isProMeta = const VerificationMeta('isPro');
+  @override
+  late final GeneratedColumn<bool> isPro = GeneratedColumn<bool>(
+    'is_pro',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_pro" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    originalLocalPath,
+    previewRemoteUrl,
+    cleanRemoteUrl,
+    width,
+    height,
+    createdAt,
+    isPro,
+    isSynced,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'job_history_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<JobHistoryTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('original_local_path')) {
+      context.handle(
+        _originalLocalPathMeta,
+        originalLocalPath.isAcceptableOrUnknown(
+          data['original_local_path']!,
+          _originalLocalPathMeta,
+        ),
+      );
+    }
+    if (data.containsKey('preview_remote_url')) {
+      context.handle(
+        _previewRemoteUrlMeta,
+        previewRemoteUrl.isAcceptableOrUnknown(
+          data['preview_remote_url']!,
+          _previewRemoteUrlMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_previewRemoteUrlMeta);
+    }
+    if (data.containsKey('clean_remote_url')) {
+      context.handle(
+        _cleanRemoteUrlMeta,
+        cleanRemoteUrl.isAcceptableOrUnknown(
+          data['clean_remote_url']!,
+          _cleanRemoteUrlMeta,
+        ),
+      );
+    }
+    if (data.containsKey('width')) {
+      context.handle(
+        _widthMeta,
+        width.isAcceptableOrUnknown(data['width']!, _widthMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_widthMeta);
+    }
+    if (data.containsKey('height')) {
+      context.handle(
+        _heightMeta,
+        height.isAcceptableOrUnknown(data['height']!, _heightMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_heightMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('is_pro')) {
+      context.handle(
+        _isProMeta,
+        isPro.isAcceptableOrUnknown(data['is_pro']!, _isProMeta),
+      );
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  JobHistoryTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return JobHistoryTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      originalLocalPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}original_local_path'],
+      ),
+      previewRemoteUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}preview_remote_url'],
+      )!,
+      cleanRemoteUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}clean_remote_url'],
+      ),
+      width: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}width'],
+      )!,
+      height: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}height'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      isPro: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_pro'],
+      )!,
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      )!,
+    );
+  }
+
+  @override
+  $JobHistoryTableTable createAlias(String alias) {
+    return $JobHistoryTableTable(attachedDatabase, alias);
+  }
+}
+
+class JobHistoryTableData extends DataClass
+    implements Insertable<JobHistoryTableData> {
+  final String id;
+  final String? originalLocalPath;
+  final String previewRemoteUrl;
+  final String? cleanRemoteUrl;
+  final int width;
+  final int height;
+  final DateTime createdAt;
+  final bool isPro;
+  final bool isSynced;
+  const JobHistoryTableData({
+    required this.id,
+    this.originalLocalPath,
+    required this.previewRemoteUrl,
+    this.cleanRemoteUrl,
+    required this.width,
+    required this.height,
+    required this.createdAt,
+    required this.isPro,
+    required this.isSynced,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || originalLocalPath != null) {
+      map['original_local_path'] = Variable<String>(originalLocalPath);
+    }
+    map['preview_remote_url'] = Variable<String>(previewRemoteUrl);
+    if (!nullToAbsent || cleanRemoteUrl != null) {
+      map['clean_remote_url'] = Variable<String>(cleanRemoteUrl);
+    }
+    map['width'] = Variable<int>(width);
+    map['height'] = Variable<int>(height);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['is_pro'] = Variable<bool>(isPro);
+    map['is_synced'] = Variable<bool>(isSynced);
+    return map;
+  }
+
+  JobHistoryTableCompanion toCompanion(bool nullToAbsent) {
+    return JobHistoryTableCompanion(
+      id: Value(id),
+      originalLocalPath: originalLocalPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(originalLocalPath),
+      previewRemoteUrl: Value(previewRemoteUrl),
+      cleanRemoteUrl: cleanRemoteUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cleanRemoteUrl),
+      width: Value(width),
+      height: Value(height),
+      createdAt: Value(createdAt),
+      isPro: Value(isPro),
+      isSynced: Value(isSynced),
+    );
+  }
+
+  factory JobHistoryTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return JobHistoryTableData(
+      id: serializer.fromJson<String>(json['id']),
+      originalLocalPath: serializer.fromJson<String?>(
+        json['originalLocalPath'],
+      ),
+      previewRemoteUrl: serializer.fromJson<String>(json['previewRemoteUrl']),
+      cleanRemoteUrl: serializer.fromJson<String?>(json['cleanRemoteUrl']),
+      width: serializer.fromJson<int>(json['width']),
+      height: serializer.fromJson<int>(json['height']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      isPro: serializer.fromJson<bool>(json['isPro']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'originalLocalPath': serializer.toJson<String?>(originalLocalPath),
+      'previewRemoteUrl': serializer.toJson<String>(previewRemoteUrl),
+      'cleanRemoteUrl': serializer.toJson<String?>(cleanRemoteUrl),
+      'width': serializer.toJson<int>(width),
+      'height': serializer.toJson<int>(height),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'isPro': serializer.toJson<bool>(isPro),
+      'isSynced': serializer.toJson<bool>(isSynced),
+    };
+  }
+
+  JobHistoryTableData copyWith({
+    String? id,
+    Value<String?> originalLocalPath = const Value.absent(),
+    String? previewRemoteUrl,
+    Value<String?> cleanRemoteUrl = const Value.absent(),
+    int? width,
+    int? height,
+    DateTime? createdAt,
+    bool? isPro,
+    bool? isSynced,
+  }) => JobHistoryTableData(
+    id: id ?? this.id,
+    originalLocalPath: originalLocalPath.present
+        ? originalLocalPath.value
+        : this.originalLocalPath,
+    previewRemoteUrl: previewRemoteUrl ?? this.previewRemoteUrl,
+    cleanRemoteUrl: cleanRemoteUrl.present
+        ? cleanRemoteUrl.value
+        : this.cleanRemoteUrl,
+    width: width ?? this.width,
+    height: height ?? this.height,
+    createdAt: createdAt ?? this.createdAt,
+    isPro: isPro ?? this.isPro,
+    isSynced: isSynced ?? this.isSynced,
+  );
+  JobHistoryTableData copyWithCompanion(JobHistoryTableCompanion data) {
+    return JobHistoryTableData(
+      id: data.id.present ? data.id.value : this.id,
+      originalLocalPath: data.originalLocalPath.present
+          ? data.originalLocalPath.value
+          : this.originalLocalPath,
+      previewRemoteUrl: data.previewRemoteUrl.present
+          ? data.previewRemoteUrl.value
+          : this.previewRemoteUrl,
+      cleanRemoteUrl: data.cleanRemoteUrl.present
+          ? data.cleanRemoteUrl.value
+          : this.cleanRemoteUrl,
+      width: data.width.present ? data.width.value : this.width,
+      height: data.height.present ? data.height.value : this.height,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      isPro: data.isPro.present ? data.isPro.value : this.isPro,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('JobHistoryTableData(')
+          ..write('id: $id, ')
+          ..write('originalLocalPath: $originalLocalPath, ')
+          ..write('previewRemoteUrl: $previewRemoteUrl, ')
+          ..write('cleanRemoteUrl: $cleanRemoteUrl, ')
+          ..write('width: $width, ')
+          ..write('height: $height, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('isPro: $isPro, ')
+          ..write('isSynced: $isSynced')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    originalLocalPath,
+    previewRemoteUrl,
+    cleanRemoteUrl,
+    width,
+    height,
+    createdAt,
+    isPro,
+    isSynced,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is JobHistoryTableData &&
+          other.id == this.id &&
+          other.originalLocalPath == this.originalLocalPath &&
+          other.previewRemoteUrl == this.previewRemoteUrl &&
+          other.cleanRemoteUrl == this.cleanRemoteUrl &&
+          other.width == this.width &&
+          other.height == this.height &&
+          other.createdAt == this.createdAt &&
+          other.isPro == this.isPro &&
+          other.isSynced == this.isSynced);
+}
+
+class JobHistoryTableCompanion extends UpdateCompanion<JobHistoryTableData> {
+  final Value<String> id;
+  final Value<String?> originalLocalPath;
+  final Value<String> previewRemoteUrl;
+  final Value<String?> cleanRemoteUrl;
+  final Value<int> width;
+  final Value<int> height;
+  final Value<DateTime> createdAt;
+  final Value<bool> isPro;
+  final Value<bool> isSynced;
+  final Value<int> rowid;
+  const JobHistoryTableCompanion({
+    this.id = const Value.absent(),
+    this.originalLocalPath = const Value.absent(),
+    this.previewRemoteUrl = const Value.absent(),
+    this.cleanRemoteUrl = const Value.absent(),
+    this.width = const Value.absent(),
+    this.height = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.isPro = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  JobHistoryTableCompanion.insert({
+    required String id,
+    this.originalLocalPath = const Value.absent(),
+    required String previewRemoteUrl,
+    this.cleanRemoteUrl = const Value.absent(),
+    required int width,
+    required int height,
+    required DateTime createdAt,
+    this.isPro = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       previewRemoteUrl = Value(previewRemoteUrl),
+       width = Value(width),
+       height = Value(height),
+       createdAt = Value(createdAt);
+  static Insertable<JobHistoryTableData> custom({
+    Expression<String>? id,
+    Expression<String>? originalLocalPath,
+    Expression<String>? previewRemoteUrl,
+    Expression<String>? cleanRemoteUrl,
+    Expression<int>? width,
+    Expression<int>? height,
+    Expression<DateTime>? createdAt,
+    Expression<bool>? isPro,
+    Expression<bool>? isSynced,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (originalLocalPath != null) 'original_local_path': originalLocalPath,
+      if (previewRemoteUrl != null) 'preview_remote_url': previewRemoteUrl,
+      if (cleanRemoteUrl != null) 'clean_remote_url': cleanRemoteUrl,
+      if (width != null) 'width': width,
+      if (height != null) 'height': height,
+      if (createdAt != null) 'created_at': createdAt,
+      if (isPro != null) 'is_pro': isPro,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  JobHistoryTableCompanion copyWith({
+    Value<String>? id,
+    Value<String?>? originalLocalPath,
+    Value<String>? previewRemoteUrl,
+    Value<String?>? cleanRemoteUrl,
+    Value<int>? width,
+    Value<int>? height,
+    Value<DateTime>? createdAt,
+    Value<bool>? isPro,
+    Value<bool>? isSynced,
+    Value<int>? rowid,
+  }) {
+    return JobHistoryTableCompanion(
+      id: id ?? this.id,
+      originalLocalPath: originalLocalPath ?? this.originalLocalPath,
+      previewRemoteUrl: previewRemoteUrl ?? this.previewRemoteUrl,
+      cleanRemoteUrl: cleanRemoteUrl ?? this.cleanRemoteUrl,
+      width: width ?? this.width,
+      height: height ?? this.height,
+      createdAt: createdAt ?? this.createdAt,
+      isPro: isPro ?? this.isPro,
+      isSynced: isSynced ?? this.isSynced,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (originalLocalPath.present) {
+      map['original_local_path'] = Variable<String>(originalLocalPath.value);
+    }
+    if (previewRemoteUrl.present) {
+      map['preview_remote_url'] = Variable<String>(previewRemoteUrl.value);
+    }
+    if (cleanRemoteUrl.present) {
+      map['clean_remote_url'] = Variable<String>(cleanRemoteUrl.value);
+    }
+    if (width.present) {
+      map['width'] = Variable<int>(width.value);
+    }
+    if (height.present) {
+      map['height'] = Variable<int>(height.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (isPro.present) {
+      map['is_pro'] = Variable<bool>(isPro.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('JobHistoryTableCompanion(')
+          ..write('id: $id, ')
+          ..write('originalLocalPath: $originalLocalPath, ')
+          ..write('previewRemoteUrl: $previewRemoteUrl, ')
+          ..write('cleanRemoteUrl: $cleanRemoteUrl, ')
+          ..write('width: $width, ')
+          ..write('height: $height, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('isPro: $isPro, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+abstract class _$AppDatabase extends GeneratedDatabase {
+  _$AppDatabase(QueryExecutor e) : super(e);
+  $AppDatabaseManager get managers => $AppDatabaseManager(this);
+  late final $JobHistoryTableTable jobHistoryTable = $JobHistoryTableTable(
+    this,
+  );
+  @override
+  Iterable<TableInfo<Table, Object?>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+  @override
+  List<DatabaseSchemaEntity> get allSchemaEntities => [jobHistoryTable];
+}
+
+typedef $$JobHistoryTableTableCreateCompanionBuilder =
+    JobHistoryTableCompanion Function({
+      required String id,
+      Value<String?> originalLocalPath,
+      required String previewRemoteUrl,
+      Value<String?> cleanRemoteUrl,
+      required int width,
+      required int height,
+      required DateTime createdAt,
+      Value<bool> isPro,
+      Value<bool> isSynced,
+      Value<int> rowid,
+    });
+typedef $$JobHistoryTableTableUpdateCompanionBuilder =
+    JobHistoryTableCompanion Function({
+      Value<String> id,
+      Value<String?> originalLocalPath,
+      Value<String> previewRemoteUrl,
+      Value<String?> cleanRemoteUrl,
+      Value<int> width,
+      Value<int> height,
+      Value<DateTime> createdAt,
+      Value<bool> isPro,
+      Value<bool> isSynced,
+      Value<int> rowid,
+    });
+
+class $$JobHistoryTableTableFilterComposer
+    extends Composer<_$AppDatabase, $JobHistoryTableTable> {
+  $$JobHistoryTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get originalLocalPath => $composableBuilder(
+    column: $table.originalLocalPath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get previewRemoteUrl => $composableBuilder(
+    column: $table.previewRemoteUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get cleanRemoteUrl => $composableBuilder(
+    column: $table.cleanRemoteUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get width => $composableBuilder(
+    column: $table.width,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get height => $composableBuilder(
+    column: $table.height,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPro => $composableBuilder(
+    column: $table.isPro,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$JobHistoryTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $JobHistoryTableTable> {
+  $$JobHistoryTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get originalLocalPath => $composableBuilder(
+    column: $table.originalLocalPath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get previewRemoteUrl => $composableBuilder(
+    column: $table.previewRemoteUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get cleanRemoteUrl => $composableBuilder(
+    column: $table.cleanRemoteUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get width => $composableBuilder(
+    column: $table.width,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get height => $composableBuilder(
+    column: $table.height,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isPro => $composableBuilder(
+    column: $table.isPro,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$JobHistoryTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $JobHistoryTableTable> {
+  $$JobHistoryTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get originalLocalPath => $composableBuilder(
+    column: $table.originalLocalPath,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get previewRemoteUrl => $composableBuilder(
+    column: $table.previewRemoteUrl,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get cleanRemoteUrl => $composableBuilder(
+    column: $table.cleanRemoteUrl,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get width =>
+      $composableBuilder(column: $table.width, builder: (column) => column);
+
+  GeneratedColumn<int> get height =>
+      $composableBuilder(column: $table.height, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isPro =>
+      $composableBuilder(column: $table.isPro, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+}
+
+class $$JobHistoryTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $JobHistoryTableTable,
+          JobHistoryTableData,
+          $$JobHistoryTableTableFilterComposer,
+          $$JobHistoryTableTableOrderingComposer,
+          $$JobHistoryTableTableAnnotationComposer,
+          $$JobHistoryTableTableCreateCompanionBuilder,
+          $$JobHistoryTableTableUpdateCompanionBuilder,
+          (
+            JobHistoryTableData,
+            BaseReferences<
+              _$AppDatabase,
+              $JobHistoryTableTable,
+              JobHistoryTableData
+            >,
+          ),
+          JobHistoryTableData,
+          PrefetchHooks Function()
+        > {
+  $$JobHistoryTableTableTableManager(
+    _$AppDatabase db,
+    $JobHistoryTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$JobHistoryTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$JobHistoryTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$JobHistoryTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String?> originalLocalPath = const Value.absent(),
+                Value<String> previewRemoteUrl = const Value.absent(),
+                Value<String?> cleanRemoteUrl = const Value.absent(),
+                Value<int> width = const Value.absent(),
+                Value<int> height = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<bool> isPro = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => JobHistoryTableCompanion(
+                id: id,
+                originalLocalPath: originalLocalPath,
+                previewRemoteUrl: previewRemoteUrl,
+                cleanRemoteUrl: cleanRemoteUrl,
+                width: width,
+                height: height,
+                createdAt: createdAt,
+                isPro: isPro,
+                isSynced: isSynced,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<String?> originalLocalPath = const Value.absent(),
+                required String previewRemoteUrl,
+                Value<String?> cleanRemoteUrl = const Value.absent(),
+                required int width,
+                required int height,
+                required DateTime createdAt,
+                Value<bool> isPro = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => JobHistoryTableCompanion.insert(
+                id: id,
+                originalLocalPath: originalLocalPath,
+                previewRemoteUrl: previewRemoteUrl,
+                cleanRemoteUrl: cleanRemoteUrl,
+                width: width,
+                height: height,
+                createdAt: createdAt,
+                isPro: isPro,
+                isSynced: isSynced,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$JobHistoryTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $JobHistoryTableTable,
+      JobHistoryTableData,
+      $$JobHistoryTableTableFilterComposer,
+      $$JobHistoryTableTableOrderingComposer,
+      $$JobHistoryTableTableAnnotationComposer,
+      $$JobHistoryTableTableCreateCompanionBuilder,
+      $$JobHistoryTableTableUpdateCompanionBuilder,
+      (
+        JobHistoryTableData,
+        BaseReferences<
+          _$AppDatabase,
+          $JobHistoryTableTable,
+          JobHistoryTableData
+        >,
+      ),
+      JobHistoryTableData,
+      PrefetchHooks Function()
+    >;
+
+class $AppDatabaseManager {
+  final _$AppDatabase _db;
+  $AppDatabaseManager(this._db);
+  $$JobHistoryTableTableTableManager get jobHistoryTable =>
+      $$JobHistoryTableTableTableManager(_db, _db.jobHistoryTable);
+}

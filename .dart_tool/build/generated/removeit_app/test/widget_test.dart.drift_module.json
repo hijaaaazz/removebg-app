@@ -1,0 +1,11 @@
+{
+  "elements": {},
+  "imports": [
+    "package:flutter_test/flutter_test.dart",
+    "package:get_it/get_it.dart",
+    "package:shared_preferences/shared_preferences.dart",
+    "package:removeit_app/app.dart",
+    "package:removeit_app/core/config/env_config.dart",
+    "package:removeit_app/injection_container.dart"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "elements": {},
+  "imports": [
+    "package:removeit_app/features/authentication/domain/entities/user_entity.dart"
+  ]
+}

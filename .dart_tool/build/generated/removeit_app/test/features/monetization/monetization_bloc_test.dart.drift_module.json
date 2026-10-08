@@ -1,0 +1,17 @@
+{
+  "elements": {},
+  "imports": [
+    "package:fpdart/fpdart.dart",
+    "package:flutter_test/flutter_test.dart",
+    "package:removeit_app/core/error/failures.dart",
+    "package:removeit_app/features/monetization/domain/entities/subscription_package_entity.dart",
+    "package:removeit_app/features/monetization/domain/repositories/monetization_repository.dart",
+    "package:removeit_app/features/monetization/domain/usecases/check_pro_status_usecase.dart",
+    "package:removeit_app/features/monetization/domain/usecases/get_offerings_usecase.dart",
+    "package:removeit_app/features/monetization/domain/usecases/purchase_package_usecase.dart",
+    "package:removeit_app/features/monetization/domain/usecases/restore_purchases_usecase.dart",
+    "package:removeit_app/features/monetization/presentation/bloc/monetization_bloc.dart",
+    "package:removeit_app/features/monetization/presentation/bloc/monetization_event.dart",
+    "package:removeit_app/features/monetization/presentation/bloc/monetization_state.dart"
+  ]
+}

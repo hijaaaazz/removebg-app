@@ -1,0 +1,8 @@
+{
+  "elements": {},
+  "imports": [
+    "package:fpdart/fpdart.dart",
+    "package:removeit_app/core/error/failures.dart",
+    "package:removeit_app/features/quota/domain/entities/user_quota_entity.dart"
+  ]
+}

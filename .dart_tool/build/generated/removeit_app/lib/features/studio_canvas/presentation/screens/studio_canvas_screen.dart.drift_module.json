@@ -1,0 +1,26 @@
+{
+  "elements": {},
+  "imports": [
+    "package:cached_network_image/cached_network_image.dart",
+    "package:flutter/material.dart",
+    "package:flutter_bloc/flutter_bloc.dart",
+    "package:go_router/go_router.dart",
+    "package:removeit_app/core/network/api_client.dart",
+    "package:removeit_app/core/services/gallery_saver_service.dart",
+    "package:removeit_app/core/services/haptic_service.dart",
+    "package:removeit_app/core/services/share_service.dart",
+    "package:removeit_app/core/theme/app_colors.dart",
+    "package:removeit_app/core/widgets/buttons/glow_button.dart",
+    "package:removeit_app/core/widgets/canvas/backdrop_selector_bar.dart",
+    "package:removeit_app/core/widgets/canvas/checkerboard_background.dart",
+    "package:removeit_app/core/widgets/canvas/comparison_slider.dart",
+    "package:removeit_app/core/widgets/canvas/zoomable_canvas.dart",
+    "package:removeit_app/core/widgets/layout/studio_scaffold.dart",
+    "package:removeit_app/core/widgets/monetization/quota_pill_badge.dart",
+    "package:removeit_app/features/image_processing/domain/entities/job_entity.dart",
+    "package:removeit_app/features/image_processing/domain/usecases/claim_job_usecase.dart",
+    "package:removeit_app/features/image_processing/domain/usecases/poll_job_status_usecase.dart",
+    "package:removeit_app/features/studio_canvas/presentation/bloc/studio_canvas_cubit.dart",
+    "package:removeit_app/injection_container.dart"
+  ]
+}

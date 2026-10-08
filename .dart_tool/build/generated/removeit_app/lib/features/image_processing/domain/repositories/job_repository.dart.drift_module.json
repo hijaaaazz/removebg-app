@@ -1,0 +1,8 @@
+{
+  "elements": {},
+  "imports": [
+    "package:fpdart/fpdart.dart",
+    "package:removeit_app/core/error/failures.dart",
+    "package:removeit_app/features/image_processing/domain/entities/job_entity.dart"
+  ]
+}

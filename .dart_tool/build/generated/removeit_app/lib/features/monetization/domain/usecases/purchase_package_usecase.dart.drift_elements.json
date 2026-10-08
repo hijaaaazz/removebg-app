@@ -1,0 +1,1 @@
+{"valid_import":true,"imports":[{"uri":"package:fpdart/fpdart.dart","transitive":false},{"uri":"package:removeit_app/core/error/failures.dart","transitive":false},{"uri":"package:removeit_app/features/monetization/domain/repositories/monetization_repository.dart","transitive":false}],"elements":[]}

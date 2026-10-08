@@ -1,0 +1,8 @@
+{
+  "elements": {},
+  "imports": [
+    "package:flutter/foundation.dart",
+    "package:image/image.dart",
+    "package:removeit_app/core/constants/app_constants.dart"
+  ]
+}

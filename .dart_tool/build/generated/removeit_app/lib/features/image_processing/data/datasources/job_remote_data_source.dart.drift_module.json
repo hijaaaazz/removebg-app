@@ -1,0 +1,9 @@
+{
+  "elements": {},
+  "imports": [
+    "package:dio/dio.dart",
+    "package:removeit_app/core/constants/api_endpoints.dart",
+    "package:removeit_app/core/network/api_client.dart",
+    "package:removeit_app/features/image_processing/data/models/job_model.dart"
+  ]
+}

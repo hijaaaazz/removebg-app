@@ -1,0 +1,6 @@
+{
+  "elements": {},
+  "imports": [
+    "package:removeit_app/features/monetization/domain/entities/ad_config_entity.dart"
+  ]
+}

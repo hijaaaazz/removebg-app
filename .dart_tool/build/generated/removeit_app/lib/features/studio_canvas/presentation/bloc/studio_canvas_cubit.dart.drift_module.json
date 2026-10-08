@@ -1,0 +1,9 @@
+{
+  "elements": {},
+  "imports": [
+    "package:equatable/equatable.dart",
+    "package:flutter/material.dart",
+    "package:flutter_bloc/flutter_bloc.dart",
+    "package:removeit_app/core/services/haptic_service.dart"
+  ]
+}

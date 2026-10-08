@@ -1,0 +1,18 @@
+{
+  "elements": {},
+  "imports": [
+    "package:flutter/material.dart",
+    "package:flutter_bloc/flutter_bloc.dart",
+    "package:go_router/go_router.dart",
+    "package:removeit_app/core/router/route_names.dart",
+    "package:removeit_app/core/services/haptic_service.dart",
+    "package:removeit_app/core/theme/app_colors.dart",
+    "package:removeit_app/core/widgets/buttons/glow_button.dart",
+    "package:removeit_app/features/authentication/presentation/bloc/auth_bloc.dart",
+    "package:removeit_app/features/authentication/presentation/bloc/auth_state.dart",
+    "package:removeit_app/features/monetization/data/datasources/admob_data_source.dart",
+    "package:removeit_app/features/quota/presentation/bloc/quota_bloc.dart",
+    "package:removeit_app/features/quota/presentation/bloc/quota_event.dart",
+    "package:removeit_app/injection_container.dart"
+  ]
+}

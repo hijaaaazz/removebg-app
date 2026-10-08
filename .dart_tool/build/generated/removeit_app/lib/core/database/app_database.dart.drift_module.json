@@ -1,0 +1,41 @@
+{
+  "elements": {
+    "AppDatabase": {
+      "id": {
+        "library_uri": "package:removeit_app/core/database/app_database.dart",
+        "name": "AppDatabase"
+      },
+      "declaration": {
+        "source_uri": "package:removeit_app/core/database/app_database.dart",
+        "offset": 331,
+        "name": "AppDatabase"
+      },
+      "references": [
+        {
+          "library_uri": "package:removeit_app/core/database/tables/job_history_table.dart",
+          "name": "job_history_table"
+        }
+      ],
+      "type": "database",
+      "tables": [
+        {
+          "library_uri": "package:removeit_app/core/database/tables/job_history_table.dart",
+          "name": "job_history_table"
+        }
+      ],
+      "views": [],
+      "includes": [],
+      "queries": [],
+      "schema_version": 1,
+      "daos": [],
+      "has_constructor_arg": true
+    }
+  },
+  "imports": [
+    "package:drift/drift.dart",
+    "package:drift/native.dart",
+    "package:path/path.dart",
+    "package:path_provider/path_provider.dart",
+    "package:removeit_app/core/database/tables/job_history_table.dart"
+  ]
+}

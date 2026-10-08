@@ -1,0 +1,12 @@
+{
+  "elements": {},
+  "imports": [
+    "package:dio/dio.dart",
+    "package:fpdart/fpdart.dart",
+    "package:removeit_app/core/error/error_handler.dart",
+    "package:removeit_app/core/error/failures.dart",
+    "package:removeit_app/features/quota/data/datasources/quota_remote_data_source.dart",
+    "package:removeit_app/features/quota/domain/entities/user_quota_entity.dart",
+    "package:removeit_app/features/quota/domain/repositories/quota_repository.dart"
+  ]
+}

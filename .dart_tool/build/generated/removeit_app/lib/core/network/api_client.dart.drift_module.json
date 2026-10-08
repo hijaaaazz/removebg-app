@@ -1,0 +1,11 @@
+{
+  "elements": {},
+  "imports": [
+    "package:dio/dio.dart",
+    "package:removeit_app/core/constants/api_endpoints.dart",
+    "package:removeit_app/core/constants/app_constants.dart",
+    "package:removeit_app/core/network/auth_interceptor.dart",
+    "package:removeit_app/core/network/logging_interceptor.dart",
+    "package:removeit_app/core/network/retry_interceptor.dart"
+  ]
+}
