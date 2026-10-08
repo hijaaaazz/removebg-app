@@ -2,9 +2,11 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:removeit_app/core/network/api_client.dart';
+import 'package:removeit_app/core/router/route_names.dart';
 import 'package:removeit_app/core/services/gallery_saver_service.dart';
 import 'package:removeit_app/core/services/haptic_service.dart';
 import 'package:removeit_app/core/services/share_service.dart';
@@ -16,9 +18,13 @@ import 'package:removeit_app/core/widgets/canvas/comparison_slider.dart';
 import 'package:removeit_app/core/widgets/canvas/zoomable_canvas.dart';
 import 'package:removeit_app/core/widgets/layout/studio_scaffold.dart';
 import 'package:removeit_app/core/widgets/monetization/quota_pill_badge.dart';
+import 'package:removeit_app/core/widgets/monetization/watch_ad_prompt_sheet.dart';
 import 'package:removeit_app/features/image_processing/domain/entities/job_entity.dart';
 import 'package:removeit_app/features/image_processing/domain/usecases/claim_job_usecase.dart';
 import 'package:removeit_app/features/image_processing/domain/usecases/poll_job_status_usecase.dart';
+import 'package:removeit_app/features/quota/presentation/bloc/quota_bloc.dart';
+import 'package:removeit_app/features/quota/presentation/bloc/quota_event.dart';
+import 'package:removeit_app/features/quota/presentation/bloc/quota_state.dart';
 import 'package:removeit_app/features/studio_canvas/presentation/bloc/studio_canvas_cubit.dart';
 import 'package:removeit_app/injection_container.dart';
 
@@ -56,11 +62,45 @@ class _StudioCanvasScreenContentState extends State<_StudioCanvasScreenContent> 
   bool _isLoading = true;
   bool _isSaving = false;
   String? _errorMessage;
+  double? _imageAspectRatio;
+  final GlobalKey _canvasRepaintKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
+    _resolveImageDimensions();
     _loadJobDetails();
+    // Fetch real-time authoritative quota status
+    context.read<QuotaBloc>().add(const FetchQuotaEvent());
+  }
+
+  Future<void> _resolveImageDimensions() async {
+    if (widget.originalFile != null) {
+      try {
+        final bytes = await widget.originalFile!.readAsBytes();
+        final codec = await ui.instantiateImageCodec(bytes);
+        final frame = await codec.getNextFrame();
+        if (mounted && frame.image.height > 0) {
+          setState(() {
+            _imageAspectRatio = frame.image.width / frame.image.height;
+          });
+        }
+      } catch (_) {}
+    }
+  }
+
+  void _resolveAspectRatioFromNetwork(String url) {
+    if (url.isEmpty || _imageAspectRatio != null) return;
+    final provider = CachedNetworkImageProvider(url);
+    provider.resolve(const ImageConfiguration()).addListener(
+      ImageStreamListener((ImageInfo info, bool _) {
+        if (mounted && info.image.height > 0) {
+          setState(() {
+            _imageAspectRatio = info.image.width / info.image.height;
+          });
+        }
+      }),
+    );
   }
 
   Future<void> _loadJobDetails() async {
@@ -76,12 +116,45 @@ class _StudioCanvasScreenContentState extends State<_StudioCanvasScreenContent> 
         (job) => setState(() {
           _isLoading = false;
           _job = job;
+          if (job.width != null && job.height != null && job.height! > 0) {
+            _imageAspectRatio ??= job.width! / job.height!;
+          }
         }),
       );
     }
   }
 
-  Future<void> _claimAndSave() async {
+  Future<String?> _exportCompositeImage(StudioCanvasState canvasState) async {
+    final cubit = context.read<StudioCanvasCubit>();
+    final wasCompareActive = canvasState.isCompareActive;
+    if (wasCompareActive) {
+      cubit.toggleCompare();
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+    }
+
+    try {
+      final boundary =
+          _canvasRepaintKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (boundary == null) return null;
+      final image = await boundary.toImage(pixelRatio: 3.0);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      if (byteData == null) return null;
+
+      final tempPath =
+          '${Directory.systemTemp.path}/composite_${_job?.id ?? DateTime.now().millisecondsSinceEpoch}.png';
+      final file = File(tempPath);
+      await file.writeAsBytes(byteData.buffer.asUint8List());
+      return tempPath;
+    } catch (_) {
+      return null;
+    } finally {
+      if (wasCompareActive && mounted) {
+        cubit.toggleCompare();
+      }
+    }
+  }
+
+  Future<void> _claimAndSave(StudioCanvasState canvasState) async {
     if (_job == null) return;
     HapticService.light();
     setState(() => _isSaving = true);
@@ -90,26 +163,56 @@ class _StudioCanvasScreenContentState extends State<_StudioCanvasScreenContent> 
       final claimUseCase = sl<ClaimJobUseCase>();
       final claimResult = await claimUseCase(_job!.id);
 
+      // Refresh authoritative quota in real-time
+      if (mounted) {
+        context.read<QuotaBloc>().add(const FetchQuotaEvent());
+      }
+
       await claimResult.fold(
         (failure) async {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: AppColors.errorRose,
-                content: Text(failure.message),
-              ),
-            );
+            final isQuotaOrPayment = failure.message.toLowerCase().contains('quota') ||
+                failure.message.toLowerCase().contains('credit') ||
+                failure.message.toLowerCase().contains('payment') ||
+                failure.message.toLowerCase().contains('removals') ||
+                failure.code == 'QUOTA_EXHAUSTED';
+
+            if (isQuotaOrPayment) {
+              await WatchAdPromptSheet.show(
+                context,
+                onRewardGranted: () {
+                  _claimAndSave(canvasState);
+                },
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: AppColors.errorRose,
+                  content: Text(failure.message),
+                ),
+              );
+            }
           }
         },
         (claimedJob) async {
-          // Download clean file and save to camera roll
-          final cleanUrl = claimedJob.cleanOutputUrl ?? _job!.previewUrl;
-          if (cleanUrl != null) {
-            final dio = sl<ApiClient>().dio;
-            final tempPath = '${Directory.systemTemp.path}/clean_${_job!.id}.png';
-            await dio.download(cleanUrl, tempPath);
+          String? filePathToSave;
 
-            final saved = await GallerySaverService.saveFileToGallery(tempPath);
+          if (canvasState.mode == BackdropMode.transparent) {
+            // Download lossless clean PNG from server
+            final cleanUrl = claimedJob.cleanOutputUrl ?? _job!.previewUrl;
+            if (cleanUrl != null) {
+              final dio = sl<ApiClient>().dio;
+              final tempPath = '${Directory.systemTemp.path}/clean_${_job!.id}.png';
+              await dio.download(cleanUrl, tempPath);
+              filePathToSave = tempPath;
+            }
+          } else {
+            // Export composited image matching exact canvas aspect ratio
+            filePathToSave = await _exportCompositeImage(canvasState);
+          }
+
+          if (filePathToSave != null) {
+            final saved = await GallerySaverService.saveFileToGallery(filePathToSave);
             if (saved && mounted) {
               await HapticService.successPattern();
               if (!mounted) return;
@@ -147,17 +250,28 @@ class _StudioCanvasScreenContentState extends State<_StudioCanvasScreenContent> 
     }
   }
 
-  Future<void> _shareCutout() async {
+  Future<void> _shareCutout(StudioCanvasState canvasState) async {
     if (_job == null) return;
     HapticService.light();
 
-    final targetUrl = _job!.cleanOutputUrl ?? _job!.previewUrl;
-    if (targetUrl != null) {
-      final dio = sl<ApiClient>().dio;
-      final tempPath = '${Directory.systemTemp.path}/share_${_job!.id}.png';
-      await dio.download(targetUrl, tempPath);
-      await ShareService.shareImage(tempPath);
-    }
+    try {
+      String? sharePath;
+      if (canvasState.mode == BackdropMode.transparent) {
+        final targetUrl = _job!.cleanOutputUrl ?? _job!.previewUrl;
+        if (targetUrl != null) {
+          final dio = sl<ApiClient>().dio;
+          final tempPath = '${Directory.systemTemp.path}/share_${_job!.id}.png';
+          await dio.download(targetUrl, tempPath);
+          sharePath = tempPath;
+        }
+      } else {
+        sharePath = await _exportCompositeImage(canvasState);
+      }
+
+      if (sharePath != null) {
+        await ShareService.shareImage(sharePath);
+      }
+    } catch (_) {}
   }
 
   @override
@@ -184,10 +298,25 @@ class _StudioCanvasScreenContentState extends State<_StudioCanvasScreenContent> 
           ),
           Padding(
             padding: const EdgeInsets.only(right: 12),
-            child: QuotaPillBadge(
-              remaining: 1,
-              isPro: false,
-              onTap: () {},
+            child: BlocBuilder<QuotaBloc, QuotaState>(
+              builder: (context, quotaState) {
+                int remaining = 0;
+                bool isPro = false;
+
+                if (quotaState is QuotaLoadedState) {
+                  remaining = quotaState.quota.remaining;
+                  isPro = quotaState.quota.isPro;
+                } else if (quotaState is QuotaExhaustedState) {
+                  remaining = 0;
+                  isPro = false;
+                }
+
+                return QuotaPillBadge(
+                  remaining: remaining,
+                  isPro: isPro,
+                  onTap: () => context.push(RouteNames.paywall),
+                );
+              },
             ),
           ),
         ],
@@ -209,30 +338,54 @@ class _StudioCanvasScreenContentState extends State<_StudioCanvasScreenContent> 
 
   Widget _buildCanvasEditor(BuildContext context) {
     final previewUrl = _job?.previewUrl ?? '';
+    if (previewUrl.isNotEmpty && _imageAspectRatio == null) {
+      _resolveAspectRatioFromNetwork(previewUrl);
+    }
+    final effectiveAspectRatio = _imageAspectRatio ?? 1.0;
 
     return BlocBuilder<StudioCanvasCubit, StudioCanvasState>(
       builder: (context, canvasState) {
         return Column(
           children: [
-            // 1. Zoomable Comparison Studio Canvas
+            // 1. Zoomable Comparison Studio Canvas constrained to exact Image Aspect Ratio
             Expanded(
               child: Container(
-                margin: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColors.surfaceBorder, width: 1),
-                ),
-                clipBehavior: Clip.antiAlias,
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                alignment: Alignment.center,
                 child: ZoomableCanvas(
-                  child: canvasState.isCompareActive && widget.originalFile != null
-                      ? ComparisonSlider(
-                          originalImage: Image.file(
-                            widget.originalFile!,
-                            fit: BoxFit.contain,
+                  child: AspectRatio(
+                    aspectRatio: effectiveAspectRatio,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: AppColors.surfaceBorder.withValues(alpha: 0.8),
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.45),
+                            blurRadius: 20,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 6),
                           ),
-                          processedImage: _buildCutoutWithBackdrop(previewUrl, canvasState),
-                        )
-                      : _buildCutoutWithBackdrop(previewUrl, canvasState),
+                        ],
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: RepaintBoundary(
+                        key: _canvasRepaintKey,
+                        child: canvasState.isCompareActive && widget.originalFile != null
+                            ? ComparisonSlider(
+                                originalImage: Image.file(
+                                  widget.originalFile!,
+                                  fit: BoxFit.cover,
+                                ),
+                                processedImage: _buildCutoutWithBackdrop(previewUrl, canvasState),
+                              )
+                            : _buildCutoutWithBackdrop(previewUrl, canvasState),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -266,17 +419,19 @@ class _StudioCanvasScreenContentState extends State<_StudioCanvasScreenContent> 
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     ),
                     icon: const Icon(Icons.share_rounded, color: Colors.white),
-                    onPressed: _isSaving ? null : _shareCutout,
+                    onPressed: _isSaving ? null : () => _shareCutout(canvasState),
                   ),
                   const SizedBox(width: 12),
 
                   // Primary Save Button
                   Expanded(
                     child: GlowButton(
-                      label: 'Save Clean PNG (HD)',
+                      label: canvasState.mode == BackdropMode.transparent
+                          ? 'Save Clean PNG (HD)'
+                          : 'Save Studio Image (HD)',
                       icon: Icons.download_rounded,
                       isLoading: _isSaving,
-                      onPressed: _claimAndSave,
+                      onPressed: () => _claimAndSave(canvasState),
                     ),
                   ),
                 ],
@@ -302,21 +457,34 @@ class _StudioCanvasScreenContentState extends State<_StudioCanvasScreenContent> 
             decoration: BoxDecoration(gradient: canvasState.gradient),
           )
         else if (canvasState.mode == BackdropMode.customPhoto && canvasState.customPhotoFile != null)
-          Image.file(canvasState.customPhotoFile!, fit: BoxFit.cover)
+          Image.file(
+            canvasState.customPhotoFile!,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          )
         else if (canvasState.mode == BackdropMode.blur && widget.originalFile != null)
-          ImageFiltered(
-            imageFilter: ui.ImageFilter.blur(
-              sigmaX: canvasState.blurSigma,
-              sigmaY: canvasState.blurSigma,
+          ClipRect(
+            child: ImageFiltered(
+              imageFilter: ui.ImageFilter.blur(
+                sigmaX: canvasState.blurSigma,
+                sigmaY: canvasState.blurSigma,
+                tileMode: TileMode.clamp,
+              ),
+              child: Image.file(
+                widget.originalFile!,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              ),
             ),
-            child: Image.file(widget.originalFile!, fit: BoxFit.contain),
           ),
 
         // B. Cutout Subject Layer
         if (previewUrl.isNotEmpty)
           CachedNetworkImage(
             imageUrl: previewUrl,
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
             placeholder: (context, url) => const Center(
               child: CircularProgressIndicator(color: AppColors.accentCyan),
             ),

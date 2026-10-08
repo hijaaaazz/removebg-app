@@ -30,6 +30,7 @@ dependencies:
 
   # Local Persistence
   drift: ^2.24.2
+  sqlite3_flutter_libs: 0.5.28
   path_provider: ^2.1.5
   path: ^1.9.1
   flutter_secure_storage: ^9.2.4
@@ -51,6 +52,7 @@ dependencies:
   # Visuals & Typography
   google_fonts: ^6.2.1
   intl: ^0.20.2
+  flutter_dotenv: ^6.0.1
 
 dev_dependencies:
   flutter_test:
@@ -69,9 +71,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
   assets:
     - assets/images/
     - assets/icons/
+    - assets/env/
 
 dependency_overrides:
   path_provider_foundation: 2.4.0

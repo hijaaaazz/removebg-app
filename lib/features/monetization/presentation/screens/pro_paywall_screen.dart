@@ -272,13 +272,14 @@ class _ProPaywallScreenContent extends StatelessWidget {
     return packages.map((pkg) {
       final isSelected = pkg.id == selectedId;
       return GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: () {
           HapticService.selection();
           context.read<MonetizationBloc>().add(SelectPackageEvent(pkg.id));
         },
         child: Container(
           margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
           decoration: BoxDecoration(
             color: isSelected ? AppColors.proGold.withValues(alpha: 0.1) : AppColors.surfaceDark,
             borderRadius: BorderRadius.circular(16),
@@ -288,6 +289,7 @@ class _ProPaywallScreenContent extends StatelessWidget {
             ),
           ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Radio indicator
               Container(
@@ -305,14 +307,18 @@ class _ProPaywallScreenContent extends StatelessWidget {
                     ? const Icon(Icons.check, size: 14, color: AppColors.backgroundDark)
                     : null,
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: 12),
 
               // Title & details
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 6,
+                      runSpacing: 4,
                       children: [
                         Text(
                           pkg.title,
@@ -322,13 +328,12 @@ class _ProPaywallScreenContent extends StatelessWidget {
                             color: Colors.white,
                           ),
                         ),
-                        if (pkg.isBestValue) ...[
-                          const SizedBox(width: 8),
+                        if (pkg.isBestValue)
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
                               color: AppColors.proGold,
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(6),
                             ),
                             child: const Text(
                               'BEST VALUE',
@@ -336,17 +341,19 @@ class _ProPaywallScreenContent extends StatelessWidget {
                                 fontSize: 9,
                                 fontWeight: FontWeight.w800,
                                 color: Colors.black,
+                                letterSpacing: 0.3,
                               ),
                             ),
                           ),
-                        ],
                       ],
                     ),
                     if (pkg.trialPeriod != null)
                       Padding(
-                        padding: const EdgeInsets.only(top: 2),
+                        padding: const EdgeInsets.only(top: 3),
                         child: Text(
-                          '${pkg.trialPeriod} Free Trial included',
+                          pkg.trialPeriod!.toLowerCase().contains('trial')
+                              ? '${pkg.trialPeriod} included'
+                              : '${pkg.trialPeriod} Free Trial included',
                           style: const TextStyle(
                             fontSize: 12,
                             color: AppColors.accentCyanLight,
@@ -357,10 +364,12 @@ class _ProPaywallScreenContent extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(width: 8),
 
               // Price
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     pkg.priceString,

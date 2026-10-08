@@ -17,7 +17,7 @@ class HistoryRemoteDataSourceImpl implements HistoryRemoteDataSource {
   Future<List<JobModel>> fetchRemoteHistory() async {
     final response = await apiClient.get<Map<String, dynamic>>(ApiEndpoints.history);
     final data = response.data!['data'] as Map<String, dynamic>;
-    final items = data['items'] as List<dynamic>;
+    final items = (data['jobs'] ?? data['items'] ?? const <dynamic>[]) as List<dynamic>;
     return items.map((item) => JobModel.fromJson(item as Map<String, dynamic>)).toList();
   }
 
@@ -28,9 +28,18 @@ class HistoryRemoteDataSourceImpl implements HistoryRemoteDataSource {
 
   @override
   Future<void> bulkDeleteRemoteJobs(List<String> ids) async {
-    await apiClient.post<dynamic>(
-      ApiEndpoints.historyBulkDelete,
-      data: {'ids': ids},
-    );
+    try {
+      await apiClient.post<dynamic>(
+        ApiEndpoints.historyBulkDelete,
+        data: {'ids': ids},
+      );
+    } catch (_) {
+      // Robust fallback: delete items individually
+      for (final id in ids) {
+        try {
+          await deleteRemoteJob(id);
+        } catch (_) {}
+      }
+    }
   }
 }

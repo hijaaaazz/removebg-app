@@ -15,9 +15,23 @@ class ErrorHandler {
         if (data is Map<String, dynamic> && data['error'] != null) {
           final errorObj = data['error'];
           final code = errorObj['code'] as String?;
-          final message = errorObj['message'] as String? ?? 'An unexpected error occurred.';
+          
+          String message = 'An unexpected error occurred.';
+          if (errorObj['user_friendly_message'] is String && (errorObj['user_friendly_message'] as String).isNotEmpty) {
+            message = errorObj['user_friendly_message'] as String;
+          } else if (errorObj['message'] is String && (errorObj['message'] as String).isNotEmpty) {
+            message = errorObj['message'] as String;
+          } else if (errorObj['message'] is Map) {
+            final msgMap = errorObj['message'] as Map;
+            message = msgMap['detail']?.toString() ?? msgMap.values.firstOrNull?.toString() ?? message;
+          } else if (errorObj['details'] is Map) {
+            final detailsMap = errorObj['details'] as Map;
+            message = detailsMap['detail']?.toString() ?? detailsMap.values.firstOrNull?.toString() ?? message;
+          }
 
           switch (code) {
+            case 'UNAUTHENTICATED':
+              return UnauthenticatedFailure(message: message);
             case 'QUOTA_EXHAUSTED':
               return const QuotaExhaustedFailure();
             case 'MAX_AD_BONUSES_REACHED':
@@ -33,6 +47,9 @@ class ErrorHandler {
             default:
               return ServerFailure(message: message, code: code);
           }
+        }
+        if (error.response?.statusCode == 401) {
+          return const UnauthenticatedFailure();
         }
         return ServerFailure(
           message: 'Server error: ${error.response?.statusCode}',

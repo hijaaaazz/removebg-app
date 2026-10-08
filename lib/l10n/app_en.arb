@@ -1,0 +1,17 @@
+{
+  "@@locale": "en",
+  "appTitle": "RemoveIt",
+  "homeUploadTitle": "Remove Background Instantly",
+  "homeUploadSubtitle": "Select any photo to isolate subjects with studio-grade precision",
+  "buttonSelectPhoto": "Select Photo from Gallery",
+  "buttonTakePhoto": "Take Photo with Camera",
+  "buttonWatchAdBonus": "Watch Video (+1 Bonus Use)",
+  "buttonUnlockPro": "Upgrade to Pro Unlimited",
+  "canvasCompareTooltip": "Drag slider to compare cutout with original photo",
+  "canvasSaveToGallery": "Save to Camera Roll",
+  "canvasSavedSuccess": "Cutout saved successfully!",
+  "historyTitle": "Cutout History",
+  "settingsTitle": "Settings",
+  "errorQuotaExhausted": "You've used today's free removals! Watch a quick video to unlock a bonus or switch to Pro.",
+  "errorNetwork": "No internet connection detected. Please check your network."
+}

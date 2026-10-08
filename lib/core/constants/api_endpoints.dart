@@ -19,6 +19,7 @@ class ApiEndpoints {
   // Ads & Mediation
   static const String adsConfig = '/ads/config/';
   static const String adsRewardedStart = '/ads/rewarded/start/';
+  static const String adsRewardedClaim = '/ads/rewarded/claim/';
 
   // History
   static const String history = '/history/';

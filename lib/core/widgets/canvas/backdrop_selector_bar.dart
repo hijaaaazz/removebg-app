@@ -68,8 +68,8 @@ class BackdropSelectorBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 72,
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      height: 84,
+      padding: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
         color: AppColors.surfaceDark.withValues(alpha: 0.95),
         border: const Border(
@@ -140,7 +140,9 @@ class BackdropSelectorBar extends StatelessWidget {
           const SizedBox(width: 16),
 
           // Vertical divider
-          Container(width: 1, height: 36, color: AppColors.surfaceBorder),
+          Center(
+            child: Container(width: 1, height: 36, color: AppColors.surfaceBorder),
+          ),
           const SizedBox(width: 16),
 
           // 4. Solid Colors

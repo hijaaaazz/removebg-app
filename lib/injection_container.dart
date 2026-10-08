@@ -3,11 +3,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:removeit_app/core/config/env_config.dart';
 import 'package:removeit_app/core/network/api_client.dart';
 import 'package:removeit_app/core/network/auth_interceptor.dart';
 import 'package:removeit_app/core/network/logging_interceptor.dart';
 import 'package:removeit_app/core/network/network_info.dart';
 import 'package:removeit_app/core/network/retry_interceptor.dart';
+import 'package:removeit_app/core/services/google_auth_service.dart';
 import 'package:removeit_app/core/services/image_picker_service.dart';
 import 'package:removeit_app/features/authentication/data/datasources/auth_local_data_source.dart';
 import 'package:removeit_app/features/authentication/data/datasources/auth_remote_data_source.dart';
@@ -39,6 +41,17 @@ import 'package:removeit_app/features/quota/data/repositories/quota_repository_i
 import 'package:removeit_app/features/quota/domain/repositories/quota_repository.dart';
 import 'package:removeit_app/features/quota/domain/usecases/get_user_quota_usecase.dart';
 import 'package:removeit_app/features/quota/presentation/bloc/quota_bloc.dart';
+import 'package:removeit_app/core/database/app_database.dart';
+import 'package:removeit_app/features/history/data/datasources/history_local_data_source.dart';
+import 'package:removeit_app/features/history/data/datasources/history_remote_data_source.dart';
+import 'package:removeit_app/features/history/data/repositories/history_repository_impl.dart';
+import 'package:removeit_app/features/history/domain/repositories/history_repository.dart';
+import 'package:removeit_app/features/history/domain/usecases/bulk_delete_history_items_usecase.dart';
+import 'package:removeit_app/features/history/domain/usecases/delete_history_item_usecase.dart';
+import 'package:removeit_app/features/history/domain/usecases/save_job_to_history_usecase.dart';
+import 'package:removeit_app/features/history/domain/usecases/sync_history_usecase.dart';
+import 'package:removeit_app/features/history/domain/usecases/watch_history_usecase.dart';
+import 'package:removeit_app/features/history/presentation/bloc/history_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -63,6 +76,11 @@ Future<void> initInjection() async {
         retryInterceptor: sl(),
       ));
   sl.registerLazySingleton<ImagePickerService>(() => ImagePickerService());
+  sl.registerLazySingleton<GoogleAuthService>(() => GoogleAuthService(
+        serverClientId: EnvConfig.instance.googleServerClientId.isNotEmpty
+            ? EnvConfig.instance.googleServerClientId
+            : null,
+      ));
 
   // 3. Authentication Feature
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(sl()));
@@ -116,5 +134,25 @@ Future<void> initInjection() async {
         purchasePackageUseCase: sl(),
         restorePurchasesUseCase: sl(),
         checkProStatusUseCase: sl(),
+      ));
+
+  // 7. Drift SQLite & History Feature
+  sl.registerLazySingleton<AppDatabase>(() => AppDatabase());
+  sl.registerLazySingleton<HistoryLocalDataSource>(() => HistoryLocalDataSourceImpl(sl()));
+  sl.registerLazySingleton<HistoryRemoteDataSource>(() => HistoryRemoteDataSourceImpl(sl()));
+  sl.registerLazySingleton<HistoryRepository>(() => HistoryRepositoryImpl(
+        localDataSource: sl(),
+        remoteDataSource: sl(),
+      ));
+  sl.registerLazySingleton<WatchHistoryUseCase>(() => WatchHistoryUseCase(sl()));
+  sl.registerLazySingleton<SyncHistoryUseCase>(() => SyncHistoryUseCase(sl()));
+  sl.registerLazySingleton<DeleteHistoryItemUseCase>(() => DeleteHistoryItemUseCase(sl()));
+  sl.registerLazySingleton<BulkDeleteHistoryItemsUseCase>(() => BulkDeleteHistoryItemsUseCase(sl()));
+  sl.registerLazySingleton<SaveJobToHistoryUseCase>(() => SaveJobToHistoryUseCase(sl()));
+  sl.registerFactory<HistoryBloc>(() => HistoryBloc(
+        watchHistoryUseCase: sl(),
+        syncHistoryUseCase: sl(),
+        deleteHistoryItemUseCase: sl(),
+        bulkDeleteHistoryItemsUseCase: sl(),
       ));
 }

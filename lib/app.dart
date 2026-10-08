@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:removeit_app/core/config/env_config.dart';
 import 'package:removeit_app/core/router/app_router.dart';
 import 'package:removeit_app/core/theme/app_theme.dart';
@@ -8,6 +9,7 @@ import 'package:removeit_app/features/authentication/presentation/bloc/auth_even
 import 'package:removeit_app/features/quota/presentation/bloc/quota_bloc.dart';
 import 'package:removeit_app/features/quota/presentation/bloc/quota_event.dart';
 import 'package:removeit_app/injection_container.dart';
+import 'package:removeit_app/l10n/app_localizations.dart';
 
 class RemoveItApp extends StatelessWidget {
   const RemoveItApp({super.key});
@@ -28,6 +30,13 @@ class RemoveItApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.darkTheme,
         themeMode: ThemeMode.dark,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
         routerConfig: AppRouter.router,
       ),
     );

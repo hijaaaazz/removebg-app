@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -8,11 +10,14 @@ import 'package:removeit_app/core/theme/app_colors.dart';
 import 'package:removeit_app/core/utils/context_extensions.dart';
 import 'package:removeit_app/core/widgets/buttons/glow_button.dart';
 import 'package:removeit_app/core/widgets/layout/studio_scaffold.dart';
-import 'package:removeit_app/core/widgets/monetization/quota_exhausted_sheet.dart';
 import 'package:removeit_app/core/widgets/monetization/quota_pill_badge.dart';
+import 'package:removeit_app/features/authentication/presentation/bloc/auth_bloc.dart';
+import 'package:removeit_app/features/authentication/presentation/bloc/auth_state.dart';
+import 'package:removeit_app/features/authentication/presentation/widgets/sign_in_prompt_sheet.dart';
 import 'package:removeit_app/features/image_processing/presentation/bloc/job_processing_bloc.dart';
 import 'package:removeit_app/features/image_processing/presentation/bloc/job_processing_event.dart';
 import 'package:removeit_app/features/image_processing/presentation/bloc/job_processing_state.dart';
+import 'package:removeit_app/features/monetization/data/datasources/admob_data_source.dart';
 import 'package:removeit_app/features/quota/presentation/bloc/quota_bloc.dart';
 import 'package:removeit_app/features/quota/presentation/bloc/quota_event.dart';
 import 'package:removeit_app/features/quota/presentation/bloc/quota_state.dart';
@@ -30,26 +35,106 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _HomeScreenContent extends StatelessWidget {
+class _HomeScreenContent extends StatefulWidget {
   const _HomeScreenContent();
 
+  @override
+  State<_HomeScreenContent> createState() => _HomeScreenContentState();
+}
+
+class _HomeScreenContentState extends State<_HomeScreenContent> {
+  bool _isPickingImage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Preload rewarded ad in the background for 0ms instantaneous display
+    sl<AdMobDataSource>().preloadRewardedAd();
+  }
+
   Future<void> _pickImage(BuildContext context, ImagePickerSource source) async {
+    HapticService.light();
+    setState(() => _isPickingImage = true);
+    File? file;
+    try {
+      final picker = sl<ImagePickerService>();
+      file = await picker.pickImage(source);
+    } finally {
+      if (mounted) {
+        setState(() => _isPickingImage = false);
+      }
+    }
+    if (file == null || !context.mounted) return;
+    final selectedFile = file;
+
+    final authState = context.read<AuthBloc>().state;
+    final isAuthenticated = authState is AuthAuthenticatedState;
+
+    if (isAuthenticated) {
+      await _processImageWithAdCheck(context, selectedFile);
+    } else {
+      // Show prompt after image is selected: sign in with Google to continue
+      await SignInPromptSheet.show(
+        context,
+        onSignInSuccess: () {
+          if (context.mounted) {
+            _processImageWithAdCheck(context, selectedFile);
+          }
+        },
+      );
+    }
+  }
+
+  Future<void> _processImageWithAdCheck(BuildContext context, File file) async {
     final quotaState = context.read<QuotaBloc>().state;
-    if (quotaState is QuotaExhaustedState ||
-        (quotaState is QuotaLoadedState && !quotaState.quota.hasQuota)) {
-      final canWatch = (quotaState is QuotaExhaustedState)
-          ? quotaState.canWatchBonusAd
-          : (quotaState as QuotaLoadedState).quota.canWatchBonusAd;
-      await QuotaExhaustedSheet.show(context, canWatchBonusAd: canWatch);
+    final isPro = (quotaState is QuotaLoadedState) && quotaState.quota.isPro;
+
+    if (isPro) {
+      // Pro subscribers get instant processing with zero ads
+      context.read<JobProcessingBloc>().add(PickImageEvent(file));
       return;
     }
 
-    HapticService.light();
-    final picker = sl<ImagePickerService>();
-    final file = await picker.pickImage(source);
-    if (file != null && context.mounted) {
-      context.read<JobProcessingBloc>().add(PickImageEvent(file));
-    }
+    // Free users: Forcefully play rewarded ad right after selecting image
+    final authState = context.read<AuthBloc>().state;
+    final userId = (authState is AuthAuthenticatedState)
+        ? authState.user.id
+        : (authState is AuthGuestState ? authState.user.id : 'anonymous_guest');
+
+    await sl<AdMobDataSource>().showRewardedBonusAd(
+      userId: userId,
+      onRewardGranted: () {
+        if (!context.mounted) return;
+        context.read<QuotaBloc>().add(const AdBonusRewardedEvent());
+        // Reward was earned -> proceed with server processing
+        context.read<JobProcessingBloc>().add(PickImageEvent(file));
+      },
+      onAdCancelled: () {
+        if (!context.mounted) return;
+        // User closed/cancelled the ad early: DO NOT CALL SERVER!
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: AppColors.surfaceBorder,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            content: const Row(
+              children: [
+                Icon(Icons.info_outline_rounded, color: AppColors.accentCyan),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text('Video was closed before finishing. No cut was used.'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      onFailure: (error) {
+        if (!context.mounted) return;
+        // If ad inventory fails or device is offline, proceed gracefully
+        context.read<JobProcessingBloc>().add(PickImageEvent(file));
+      },
+    );
   }
 
   @override
@@ -64,29 +149,19 @@ class _HomeScreenContent extends StatelessWidget {
               builder: (context, quotaState) {
                 int remaining = 0;
                 bool isPro = false;
-                bool canWatchBonus = true;
 
                 if (quotaState is QuotaLoadedState) {
                   remaining = quotaState.quota.remaining;
                   isPro = quotaState.quota.isPro;
-                  canWatchBonus = quotaState.quota.canWatchBonusAd;
                 } else if (quotaState is QuotaExhaustedState) {
                   remaining = 0;
                   isPro = false;
-                  canWatchBonus = quotaState.canWatchBonusAd;
                 }
 
                 return QuotaPillBadge(
                   remaining: remaining,
                   isPro: isPro,
-                  onTap: () {
-                    if (isPro) return;
-                    if (remaining <= 0) {
-                      QuotaExhaustedSheet.show(context, canWatchBonusAd: canWatchBonus);
-                    } else {
-                      context.push(RouteNames.paywall);
-                    }
-                  },
+                  onTap: () => context.push(RouteNames.paywall),
                 );
               },
             ),
@@ -94,37 +169,47 @@ class _HomeScreenContent extends StatelessWidget {
         ],
       ),
       body: BlocConsumer<JobProcessingBloc, JobProcessingState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is JobPreviewReadyState) {
-            HapticService.successPattern();
+            await HapticService.successPattern();
+            if (!context.mounted) return;
             context.read<QuotaBloc>().add(const QuotaDecrementedEvent());
-            context.push(
+            await context.push(
               '${RouteNames.canvas}?jobId=${state.job.id}',
               extra: state.originalFile,
             );
+            if (context.mounted) {
+              context.read<JobProcessingBloc>().add(const ResetJobEvent());
+            }
           } else if (state is JobErrorState) {
-            HapticService.warningPattern();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: AppColors.errorRose,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                content: Text(state.message, style: const TextStyle(color: Colors.white)),
-                action: SnackBarAction(
-                  label: 'Dismiss',
-                  textColor: Colors.white,
-                  onPressed: () {
-                    context.read<JobProcessingBloc>().add(const ResetJobEvent());
-                  },
+            await HapticService.warningPattern();
+            if (!context.mounted) return;
+            if (state.errorCode == 'UNAUTHENTICATED') {
+              unawaited(SignInPromptSheet.show(context));
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: AppColors.errorRose,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  content: Text(state.message, style: const TextStyle(color: Colors.white)),
+                  action: SnackBarAction(
+                    label: 'Dismiss',
+                    textColor: Colors.white,
+                    onPressed: () {
+                      context.read<JobProcessingBloc>().add(const ResetJobEvent());
+                    },
+                  ),
                 ),
-              ),
-            );
+              );
+            }
           }
         },
         builder: (context, state) {
           final isProcessing = state is JobCompressingState ||
               state is JobUploadingState ||
               state is JobProcessingOnServerState;
+          final isBusy = isProcessing || _isPickingImage;
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -165,8 +250,8 @@ class _HomeScreenContent extends StatelessWidget {
                 GlowButton(
                   label: 'Select Photo from Gallery',
                   icon: Icons.photo_library_rounded,
-                  isLoading: isProcessing,
-                  onPressed: isProcessing
+                  isLoading: isBusy,
+                  onPressed: isBusy
                       ? null
                       : () => _pickImage(context, ImagePickerSource.gallery),
                 ),
@@ -178,7 +263,7 @@ class _HomeScreenContent extends StatelessWidget {
                     side: const BorderSide(color: AppColors.surfaceBorder, width: 1),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
-                  onPressed: isProcessing
+                  onPressed: isBusy
                       ? null
                       : () => _pickImage(context, ImagePickerSource.camera),
                   child: const Row(

@@ -35,20 +35,25 @@ class AuthInterceptor extends QueuedInterceptor {
         );
 
         if (response.statusCode == 200 && response.data != null) {
-          final data = response.data!['data'] as Map<String, dynamic>;
-          final newAccessToken = data['access'] as String;
+          final raw = response.data!;
+          final data = (raw['data'] is Map<String, dynamic>)
+              ? raw['data'] as Map<String, dynamic>
+              : raw;
+          final newAccessToken = data['access'] as String?;
           final newRefreshToken = data['refresh'] as String?;
 
-          await secureStorage.write(key: StorageKeys.accessToken, value: newAccessToken);
-          if (newRefreshToken != null) {
-            await secureStorage.write(key: StorageKeys.refreshToken, value: newRefreshToken);
-          }
+          if (newAccessToken != null && newAccessToken.isNotEmpty) {
+            await secureStorage.write(key: StorageKeys.accessToken, value: newAccessToken);
+            if (newRefreshToken != null && newRefreshToken.isNotEmpty) {
+              await secureStorage.write(key: StorageKeys.refreshToken, value: newRefreshToken);
+            }
 
-          // Retry failed request with new access token
-          final options = err.requestOptions;
-          options.headers['Authorization'] = 'Bearer $newAccessToken';
-          final retryResponse = await dio.fetch<dynamic>(options);
-          return handler.resolve(retryResponse);
+            // Retry failed request with new access token
+            final options = err.requestOptions;
+            options.headers['Authorization'] = 'Bearer $newAccessToken';
+            final retryResponse = await dio.fetch<dynamic>(options);
+            return handler.resolve(retryResponse);
+          }
         }
       } catch (refreshError) {
         // Token revoked/expired: purge stored credentials

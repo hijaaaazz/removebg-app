@@ -1,0 +1,17 @@
+{
+  "@@locale": "es",
+  "appTitle": "RemoveIt",
+  "homeUploadTitle": "Eliminar Fondo al Instante",
+  "homeUploadSubtitle": "Selecciona cualquier foto para recortar objetos con precisión de estudio",
+  "buttonSelectPhoto": "Elegir Foto de la Galería",
+  "buttonTakePhoto": "Tomar Foto con Cámara",
+  "buttonWatchAdBonus": "Ver Video (+1 Corte Gratis)",
+  "buttonUnlockPro": "Actualizar a Pro Ilimitado",
+  "canvasCompareTooltip": "Desliza para comparar el recorte con la foto original",
+  "canvasSaveToGallery": "Guardar en Fotos",
+  "canvasSavedSuccess": "¡Recorte guardado con éxito!",
+  "historyTitle": "Historial de Recortes",
+  "settingsTitle": "Configuración",
+  "errorQuotaExhausted": "Has agotado los recortes gratis de hoy. Mira un video para desbloquear un bono.",
+  "errorNetwork": "No se detectó conexión a internet. Por favor verifica tu red."
+}

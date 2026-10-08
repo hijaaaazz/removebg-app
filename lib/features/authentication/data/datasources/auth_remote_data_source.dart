@@ -23,7 +23,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       },
     );
 
-    final data = response.data!['data'] as Map<String, dynamic>;
+    final raw = response.data!;
+    final data = (raw['data'] is Map<String, dynamic>)
+        ? raw['data'] as Map<String, dynamic>
+        : raw;
     final user = UserModel.fromJson(data['user'] as Map<String, dynamic>);
     final tokens = AuthTokensModel.fromJson(data['tokens'] as Map<String, dynamic>);
 

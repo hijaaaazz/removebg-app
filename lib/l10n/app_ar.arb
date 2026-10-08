@@ -1,0 +1,17 @@
+{
+  "@@locale": "ar",
+  "appTitle": "ريموف إت",
+  "homeUploadTitle": "إزالة الخلفية فورياً",
+  "homeUploadSubtitle": "اختر أي صورة لعزل العناصر بدقة استوديو فائقة",
+  "buttonSelectPhoto": "اختيار صورة من المعرض",
+  "buttonTakePhoto": "التقاط صورة بالكاميرا",
+  "buttonWatchAdBonus": "مشاهدة إعلان (+1 استخدام إضافي)",
+  "buttonUnlockPro": "الترقية إلى برو غير المحدود",
+  "canvasCompareTooltip": "اسحب شريط التمرير لمقارنة النتيجة بالصورة الأصلية",
+  "canvasSaveToGallery": "حفظ في ألبوم الكاميرا",
+  "canvasSavedSuccess": "تم حفظ الصورة بنجاح!",
+  "historyTitle": "سجل الصور",
+  "settingsTitle": "الإعدادات",
+  "errorQuotaExhausted": "لقد استنفدت المحاولات المجانية اليوم! شاهد إعلاناً للحصول على محاولة إضافية أو اشترك في برو.",
+  "errorNetwork": "تعذر العثور على اتصال بالإنترنت. يرجى التحقق من الشبكة."
+}

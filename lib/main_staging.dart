@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:removeit_app/app.dart';
 import 'package:removeit_app/core/config/env_config.dart';
 import 'package:removeit_app/injection_container.dart';
@@ -6,17 +8,20 @@ import 'package:removeit_app/injection_container.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  EnvConfig.initialize(
-    flavor: Flavor.staging,
-    apiBaseUrl: 'https://staging-api.removebg.app/api/v1',
-    appTitle: 'RemoveIt (Staging)',
-    enableLogging: true,
-    admobBannerId: 'ca-app-pub-3940256099942544/6300978111',
-    admobRewardedId: 'ca-app-pub-3940256099942544/5224354917',
-    admobInterstitialId: 'ca-app-pub-3940256099942544/1033173712',
-  );
-
+  await EnvConfig.bootstrap(Flavor.staging);
   await initInjection();
 
+  if (EnvConfig.instance.enableAdmob) {
+    unawaited(_initMobileAds());
+  }
+
   runApp(const RemoveItApp());
+}
+
+Future<void> _initMobileAds() async {
+  try {
+    await MobileAds.instance.initialize();
+  } catch (e) {
+    debugPrint('[AdMob] Failed to initialize: $e');
+  }
 }

@@ -1,4 +1,4 @@
-package com.example.removeit_app
+package com.removeit.app
 
 import io.flutter.embedding.android.FlutterActivity
 

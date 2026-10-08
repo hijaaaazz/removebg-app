@@ -64,7 +64,7 @@ class RevenueCatDataSourceImpl implements RevenueCatDataSource {
               currencyCode: pkg.storeProduct.currencyCode,
               packageType: pType,
               isBestValue: pType == PackageType.annual,
-              trialPeriod: pType == PackageType.annual ? '3 Days Free' : null,
+              trialPeriod: pType == PackageType.annual ? '3-Day Free Trial' : null,
               monthlyEquivalentPrice: monthlyEquiv,
             );
           }).toList();
@@ -136,37 +136,27 @@ class RevenueCatDataSourceImpl implements RevenueCatDataSource {
   List<SubscriptionPackageEntity> _getDefaultStudioPackages() {
     return const [
       SubscriptionPackageEntity(
-        id: 'pro_annual',
-        title: 'Annual Pro Studio',
-        description: 'Unlimited 4K HD cutouts, custom backdrops, and ad-free studio',
-        priceString: '\$29.99/year',
-        price: 29.99,
-        currencyCode: 'USD',
-        packageType: PackageType.annual,
-        isBestValue: true,
-        trialPeriod: '3 Days Free',
-        monthlyEquivalentPrice: '\$2.49/mo',
-      ),
-      SubscriptionPackageEntity(
         id: 'pro_monthly',
         title: 'Monthly Pro Studio',
-        description: 'Unlimited cutouts with monthly flexibility',
-        priceString: '\$4.99/month',
+        description: 'Unlimited 4K HD cutouts, custom backdrops, and ad-free studio',
+        priceString: '\$4.99/mo',
         price: 4.99,
         currencyCode: 'USD',
         packageType: PackageType.monthly,
         isBestValue: false,
-        monthlyEquivalentPrice: '\$4.99/mo',
+        monthlyEquivalentPrice: null,
       ),
       SubscriptionPackageEntity(
-        id: 'pro_lifetime',
-        title: 'Lifetime Unlimited',
-        description: 'Pay once, use forever across all iOS and Android devices',
-        priceString: '\$59.99',
-        price: 59.99,
+        id: 'pro_annual',
+        title: 'Annual Pro Studio',
+        description: 'Save 50% with annual billing. Full studio access & priority AI',
+        priceString: '\$29.99/yr',
+        price: 29.99,
         currencyCode: 'USD',
-        packageType: PackageType.lifetime,
-        isBestValue: false,
+        packageType: PackageType.annual,
+        isBestValue: true,
+        trialPeriod: '3-Day Free Trial',
+        monthlyEquivalentPrice: '\$2.49/mo',
       ),
     ];
   }

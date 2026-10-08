@@ -18,8 +18,16 @@ class UserQuotaModel extends UserQuotaEntity {
       resetTime = DateTime.tryParse(json['resets_at'] as String);
     }
 
+    String planStr = 'free';
+    if (json['plan'] is String) {
+      planStr = json['plan'] as String;
+    } else if (json['plan'] is Map) {
+      final pMap = json['plan'] as Map<String, dynamic>;
+      planStr = (pMap['code'] ?? pMap['name'] ?? 'free').toString();
+    }
+
     return UserQuotaModel(
-      plan: json['plan'] as String? ?? 'free',
+      plan: planStr,
       baseLimit: json['base_limit'] as int? ?? 1,
       adBonusGranted: json['ad_bonus_granted'] as int? ?? 0,
       totalAllowed: json['total_allowed'] as int? ?? 1,

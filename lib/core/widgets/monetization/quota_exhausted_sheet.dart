@@ -68,6 +68,26 @@ class _QuotaExhaustedSheetState extends State<QuotaExhaustedSheet> {
             ),
           );
         },
+        onAdCancelled: () {
+          if (!mounted) return;
+          setState(() => _isLoadingAd = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: AppColors.surfaceBorder,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              content: const Row(
+                children: [
+                  Icon(Icons.info_outline_rounded, color: AppColors.accentCyan),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text('Video was closed before finishing. No cut was added.'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
         onFailure: (error) {
           if (!mounted) return;
           setState(() => _isLoadingAd = false);

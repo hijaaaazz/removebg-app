@@ -14,6 +14,13 @@ class ServerFailure extends Failure {
   const ServerFailure({required super.message, super.code});
 }
 
+class UnauthenticatedFailure extends Failure {
+  const UnauthenticatedFailure({
+    super.message = 'Please sign in with your Google account to continue.',
+    super.code = 'UNAUTHENTICATED',
+  });
+}
+
 class NetworkFailure extends Failure {
   const NetworkFailure({
     super.message = 'No internet connection detected. Please check your network.',

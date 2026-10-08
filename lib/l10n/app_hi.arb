@@ -1,0 +1,17 @@
+{
+  "@@locale": "hi",
+  "appTitle": "रिमूवइट",
+  "homeUploadTitle": "तुरंत बैकग्राउंड हटाएं",
+  "homeUploadSubtitle": "स्टूडियो जैसी स्पष्टता के साथ फोटो से बैकग्राउंड अलग करें",
+  "buttonSelectPhoto": "गैलरी से फोटो चुनें",
+  "buttonTakePhoto": "कैमरे से फोटो लें",
+  "buttonWatchAdBonus": "वीडियो देखें (+1 बोनस उपयोग)",
+  "buttonUnlockPro": "प्रो अनलिमिटेड में अपग्रेड करें",
+  "canvasCompareTooltip": "मूल फोटो के साथ कटआउट की तुलना करने के लिए स्लाइडर खींचें",
+  "canvasSaveToGallery": "गैलरी में सहेजें",
+  "canvasSavedSuccess": "कटआउट सफलतापूर्वक सहेजा गया!",
+  "historyTitle": "कटआउट इतिहास",
+  "settingsTitle": "सेटिंग्स",
+  "errorQuotaExhausted": "आज के मुफ्त कट समाप्त हो गए हैं। बोनस अनलॉक करने के लिए वीडियो देखें।",
+  "errorNetwork": "इंटरनेट कनेक्शन नहीं मिला। कृपया अपना नेटवर्क जांचें।"
+}

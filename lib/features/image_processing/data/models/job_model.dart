@@ -1,3 +1,4 @@
+import 'package:removeit_app/core/config/env_config.dart';
 import 'package:removeit_app/features/image_processing/domain/entities/job_entity.dart';
 
 class JobModel extends JobEntity {
@@ -13,6 +14,22 @@ class JobModel extends JobEntity {
     super.requiresClaim = false,
     super.estimatedWaitSeconds = 3,
   });
+
+  static String? _resolveUrl(String? rawUrl) {
+    if (rawUrl == null || rawUrl.isEmpty) return null;
+    if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://')) {
+      return rawUrl;
+    }
+    try {
+      final origin = Uri.parse(EnvConfig.instance.apiBaseUrl).origin;
+      if (rawUrl.startsWith('/')) {
+        return '$origin$rawUrl';
+      }
+      return '$origin/$rawUrl';
+    } catch (_) {
+      return rawUrl;
+    }
+  }
 
   factory JobModel.fromJson(Map<String, dynamic> json) {
     int? w;
@@ -31,8 +48,8 @@ class JobModel extends JobEntity {
     return JobModel(
       id: (json['job_id'] ?? json['id']) as String,
       status: json['status'] as String? ?? 'queued',
-      previewUrl: json['preview_url'] as String?,
-      cleanOutputUrl: json['clean_output_url'] as String?,
+      previewUrl: _resolveUrl(json['preview_url'] as String?),
+      cleanOutputUrl: _resolveUrl(json['clean_output_url'] as String?),
       width: w,
       height: h,
       outputResolutionTier: json['output_resolution_tier'] as String?,

@@ -9,7 +9,7 @@ class QuotaPillBadge extends StatelessWidget {
 
   const QuotaPillBadge({
     super.key,
-    required this.remaining,
+    this.remaining = 0,
     required this.isPro,
     required this.onTap,
   });
@@ -24,28 +24,33 @@ class QuotaPillBadge extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isPro ? AppColors.proGold.withValues(alpha: 0.15) : AppColors.surfaceDark,
+          color: isPro
+              ? AppColors.proGold.withValues(alpha: 0.15)
+              : AppColors.primaryViolet.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isPro ? AppColors.proGold.withValues(alpha: 0.4) : AppColors.surfaceBorder,
+            color: isPro
+                ? AppColors.proGold.withValues(alpha: 0.5)
+                : AppColors.proGold.withValues(alpha: 0.4),
             width: 1,
           ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              isPro ? Icons.workspace_premium_rounded : Icons.flash_on_rounded,
-              color: isPro ? AppColors.proGold : (remaining > 0 ? AppColors.accentCyan : AppColors.warningAmber),
+            const Icon(
+              Icons.workspace_premium_rounded,
+              color: AppColors.proGold,
               size: 16,
             ),
             const SizedBox(width: 6),
             Text(
-              isPro ? 'PRO' : '$remaining Left',
-              style: TextStyle(
+              isPro ? 'PRO' : 'Go Pro',
+              style: const TextStyle(
                 fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: isPro ? AppColors.proGold : (remaining > 0 ? Colors.white : AppColors.warningAmber),
+                fontWeight: FontWeight.w700,
+                color: AppColors.proGold,
+                letterSpacing: 0.3,
               ),
             ),
           ],
