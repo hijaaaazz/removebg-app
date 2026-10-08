@@ -1,37 +1,52 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' as rc;
 import 'package:removeit_app/core/config/env_config.dart';
 import 'package:removeit_app/features/monetization/domain/entities/subscription_package_entity.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class RevenueCatDataSource {
-  Future<void> initialize({required String appUserId});
+  Future<void> initialize({String? appUserId});
   Future<List<SubscriptionPackageEntity>> getOfferings();
   Future<bool> purchasePackage(String packageId);
   Future<bool> restorePurchases();
   Future<bool> isUserPro();
+  Future<void> setMockPro(bool isPro);
 }
 
 class RevenueCatDataSourceImpl implements RevenueCatDataSource {
-  static const String entitlementId = 'pro_access';
+  static const String entitlementId = 'removebg_free_pro';
+  static const String fallbackEntitlementId = 'pro_access';
+  static const String _mockProKey = 'rc_mock_pro_enabled';
+
+  final SharedPreferences sharedPreferences;
   bool _isConfigured = false;
   List<rc.Package> _cachedRcPackages = [];
 
+  RevenueCatDataSourceImpl(this.sharedPreferences);
+
   @override
-  Future<void> initialize({required String appUserId}) async {
+  Future<void> initialize({String? appUserId}) async {
     try {
       final apiKey = Platform.isAndroid
           ? EnvConfig.instance.revenueCatAndroidKey
           : EnvConfig.instance.revenueCatIosKey;
 
-      if (apiKey.isEmpty) {
+      if (apiKey.isEmpty || apiKey.contains('sample_key')) {
+        debugPrint('[RevenueCat] Placeholder key detected. Test sandbox mode active.');
         _isConfigured = false;
         return;
       }
 
-      final configuration = rc.PurchasesConfiguration(apiKey)..appUserID = appUserId;
+      final configuration = rc.PurchasesConfiguration(apiKey);
+      if (appUserId != null && appUserId.isNotEmpty) {
+        configuration.appUserID = appUserId;
+      }
       await rc.Purchases.configure(configuration);
       _isConfigured = true;
-    } catch (_) {
+      debugPrint('[RevenueCat] SDK successfully initialized with backend.');
+    } catch (e) {
+      debugPrint('[RevenueCat] Initialization error: $e');
       _isConfigured = false;
     }
   }
@@ -69,8 +84,8 @@ class RevenueCatDataSourceImpl implements RevenueCatDataSource {
             );
           }).toList();
         }
-      } catch (_) {
-        // Fall back to default catalog if RevenueCat network or sandbox error occurs
+      } catch (e) {
+        debugPrint('[RevenueCat] Fetch offerings error: $e');
       }
     }
 
@@ -84,13 +99,20 @@ class RevenueCatDataSourceImpl implements RevenueCatDataSource {
       if (targetPkg != null) {
         try {
           final customerInfo = await rc.Purchases.purchasePackage(targetPkg);
-          return customerInfo.entitlements.all[entitlementId]?.isActive ?? false;
-        } catch (_) {
+          final active = _hasActiveEntitlement(customerInfo);
+          if (active) {
+            await setMockPro(true);
+            return true;
+          }
+          return false;
+        } catch (e) {
+          debugPrint('[RevenueCat] Purchase failed or cancelled: $e');
           return false;
         }
       }
     }
-    // Sandbox / Test fallback simulator
+    // Sandbox / Test fallback simulator (allows instant testing on emulator)
+    await setMockPro(true);
     return true;
   }
 
@@ -99,25 +121,46 @@ class RevenueCatDataSourceImpl implements RevenueCatDataSource {
     if (_isConfigured) {
       try {
         final customerInfo = await rc.Purchases.restorePurchases();
-        return customerInfo.entitlements.all[entitlementId]?.isActive ?? false;
-      } catch (_) {
-        return false;
+        final active = _hasActiveEntitlement(customerInfo);
+        if (active) {
+          await setMockPro(true);
+          return true;
+        }
+      } catch (e) {
+        debugPrint('[RevenueCat] Restore failed: $e');
       }
     }
-    return true;
+    return sharedPreferences.getBool(_mockProKey) ?? false;
   }
 
   @override
   Future<bool> isUserPro() async {
+    // Check local test mode first (enables immediate testing)
+    final isMockPro = sharedPreferences.getBool(_mockProKey) ?? false;
+    if (isMockPro) {
+      return true;
+    }
+
     if (_isConfigured) {
       try {
         final customerInfo = await rc.Purchases.getCustomerInfo();
-        return customerInfo.entitlements.all[entitlementId]?.isActive ?? false;
+        return _hasActiveEntitlement(customerInfo);
       } catch (_) {
         return false;
       }
     }
     return false;
+  }
+
+  bool _hasActiveEntitlement(rc.CustomerInfo customerInfo) {
+    return (customerInfo.entitlements.all[entitlementId]?.isActive ?? false) ||
+        (customerInfo.entitlements.all[fallbackEntitlementId]?.isActive ?? false) ||
+        customerInfo.entitlements.active.isNotEmpty;
+  }
+
+  @override
+  Future<void> setMockPro(bool isPro) async {
+    await sharedPreferences.setBool(_mockProKey, isPro);
   }
 
   PackageType _mapRcPackageType(rc.PackageType type) {

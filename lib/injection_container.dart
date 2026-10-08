@@ -115,15 +115,8 @@ Future<void> initInjection() async {
         claimJobUseCase: sl(),
       ));
 
-  // 5. Quota & AdMob Monetization Feature
-  sl.registerLazySingleton<QuotaRemoteDataSource>(() => QuotaRemoteDataSourceImpl(sl()));
-  sl.registerLazySingleton<QuotaRepository>(() => QuotaRepositoryImpl(sl()));
-  sl.registerLazySingleton<GetUserQuotaUseCase>(() => GetUserQuotaUseCase(sl()));
-  sl.registerLazySingleton<QuotaBloc>(() => QuotaBloc(getUserQuotaUseCase: sl()));
-  sl.registerLazySingleton<AdMobDataSource>(() => AdMobDataSourceImpl(sl()));
-
-  // 6. RevenueCat In-App Purchases Feature
-  sl.registerLazySingleton<RevenueCatDataSource>(() => RevenueCatDataSourceImpl());
+  // 5. RevenueCat In-App Purchases Feature
+  sl.registerLazySingleton<RevenueCatDataSource>(() => RevenueCatDataSourceImpl(sl()));
   sl.registerLazySingleton<MonetizationRepository>(() => MonetizationRepositoryImpl(sl()));
   sl.registerLazySingleton<GetOfferingsUseCase>(() => GetOfferingsUseCase(sl()));
   sl.registerLazySingleton<PurchasePackageUseCase>(() => PurchasePackageUseCase(sl()));
@@ -135,6 +128,13 @@ Future<void> initInjection() async {
         restorePurchasesUseCase: sl(),
         checkProStatusUseCase: sl(),
       ));
+
+  // 6. Quota & AdMob Monetization Feature
+  sl.registerLazySingleton<QuotaRemoteDataSource>(() => QuotaRemoteDataSourceImpl(sl()));
+  sl.registerLazySingleton<QuotaRepository>(() => QuotaRepositoryImpl(sl(), sl()));
+  sl.registerLazySingleton<GetUserQuotaUseCase>(() => GetUserQuotaUseCase(sl()));
+  sl.registerLazySingleton<QuotaBloc>(() => QuotaBloc(getUserQuotaUseCase: sl()));
+  sl.registerLazySingleton<AdMobDataSource>(() => AdMobDataSourceImpl(sl()));
 
   // 7. Drift SQLite & History Feature
   sl.registerLazySingleton<AppDatabase>(() => AppDatabase());

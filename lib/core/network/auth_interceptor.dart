@@ -39,8 +39,14 @@ class AuthInterceptor extends QueuedInterceptor {
           final data = (raw['data'] is Map<String, dynamic>)
               ? raw['data'] as Map<String, dynamic>
               : raw;
-          final newAccessToken = data['access'] as String?;
-          final newRefreshToken = data['refresh'] as String?;
+          final newAccessToken = (data['access'] ??
+                  data['access_token'] ??
+                  (data['tokens'] is Map ? data['tokens']['access'] : null))
+              as String?;
+          final newRefreshToken = (data['refresh'] ??
+                  data['refresh_token'] ??
+                  (data['tokens'] is Map ? data['tokens']['refresh'] : null))
+              as String?;
 
           if (newAccessToken != null && newAccessToken.isNotEmpty) {
             await secureStorage.write(key: StorageKeys.accessToken, value: newAccessToken);

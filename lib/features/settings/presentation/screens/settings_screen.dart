@@ -12,8 +12,11 @@ import 'package:removeit_app/features/authentication/presentation/bloc/auth_stat
 import 'package:removeit_app/features/authentication/presentation/widgets/sign_in_prompt_sheet.dart';
 import 'package:removeit_app/features/history/presentation/bloc/history_bloc.dart';
 import 'package:removeit_app/features/history/presentation/bloc/history_event.dart';
+import 'package:removeit_app/features/monetization/data/datasources/revenuecat_data_source.dart';
 import 'package:removeit_app/features/quota/presentation/bloc/quota_bloc.dart';
+import 'package:removeit_app/features/quota/presentation/bloc/quota_event.dart';
 import 'package:removeit_app/features/quota/presentation/bloc/quota_state.dart';
+import 'package:removeit_app/injection_container.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -390,6 +393,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ],
                 ),
               );
+            },
+          ),
+          const Divider(color: AppColors.surfaceBorder, height: 1),
+          ListTile(
+            leading: const Icon(Icons.refresh_rounded, color: AppColors.proGold),
+            title: const Text('Reset Pro Subscription (Dev Mode)', style: TextStyle(color: Colors.white, fontSize: 14)),
+            subtitle: const Text('Reverts Pro status back to Free tier for testing ads & limits',
+                style: TextStyle(color: AppColors.textSecondaryDark, fontSize: 12)),
+            onTap: () async {
+              await sl<RevenueCatDataSource>().setMockPro(false);
+              if (context.mounted) {
+                context.read<QuotaBloc>().add(const FetchQuotaEvent());
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: AppColors.primaryViolet,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    content: const Text('Pro subscription reset to Free tier.'),
+                  ),
+                );
+              }
             },
           ),
         ],
