@@ -1,30 +1,34 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:removeit_app/main.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:removeit_app/app.dart';
+import 'package:removeit_app/core/config/env_config.dart';
+import 'package:removeit_app/injection_container.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  setUp(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
+    await GetIt.instance.reset();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    EnvConfig.initialize(
+      flavor: Flavor.dev,
+      apiBaseUrl: 'http://127.0.0.1:8000/api/v1',
+      appTitle: 'RemoveIt (Dev)',
+      enableLogging: false,
+      admobBannerId: 'test_banner',
+      admobRewardedId: 'test_rewarded',
+      admobInterstitialId: 'test_interstitial',
+    );
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await initInjection();
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('App smoke test renders home studio screen', (WidgetTester tester) async {
+    await tester.pumpWidget(const RemoveItApp());
+    await tester.pumpAndSettle();
+
+    expect(find.text('RemoveIt Studio'), findsOneWidget);
+    expect(find.text('Remove Background Instantly'), findsOneWidget);
   });
 }

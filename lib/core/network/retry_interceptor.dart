@@ -24,7 +24,7 @@ class RetryInterceptor extends Interceptor {
 
     if (shouldRetry) {
       err.requestOptions.extra['retry_count'] = retryCount + 1;
-      await Future.delayed(retryDelay * (retryCount + 1));
+      await Future<void>.delayed(retryDelay * (retryCount + 1));
 
       try {
         final dio = Dio();

@@ -10,11 +10,11 @@
 
 | Phase | Milestone Name | Status | Completion % | Verified Deliverables |
 |---|---|---|:---:|---|
-| **Phase 0** | Foundations, Core Tooling & DI Skeleton | **IN PROGRESS** | **50%** | Full 17-document architecture suite completed, design tokens planned; starter Flutter project created; awaiting dependency installation & core wiring. |
-| **Phase 1** | Guest-First Mode & Auth (Google/Apple) | **QUEUED** | **0%** | Architecture documented in `05_AUTH_GUEST_MODE_AND_SECURITY.md`; backend endpoints ready at `/api/v1/auth/google/`. |
-| **Phase 2** | Media Picker, Preprocessor & Multipart Upload | **QUEUED** | **0%** | Architecture documented in `06_NETWORKING_API_AND_OFFLINE_SYNC.md`; backend tested via test pipeline runner. |
-| **Phase 3** | Studio Canvas, Split Slider & Backdrop Engine | **QUEUED** | **0%** | Architecture documented in `03_CONSUMER_MOBILE_UI_UX_AND_DESIGN_SYSTEM.md` and `07_IMAGE_PROCESSING_CANVAS_AND_STUDIO_ENGINE.md`. |
-| **Phase 4** | Atomic Daily Quota & AdMob SSV Monetization | **QUEUED** | **0%** | Architecture documented in `08_MONETIZATION_ADMOB_SSV_AND_REVENUECAT.md`; backend SSV callback verified. |
+| **Phase 0** | Foundations, Core Tooling & DI Skeleton | **COMPLETED** | **100%** | Full 17-document architecture suite, strict analysis rules, pubspec dependencies, multi-flavor configs (dev/staging/prod), studio dark theme, Dio ApiClient, get_it DI, and GoRouter bottom navigation shell verified. |
+| **Phase 1** | Guest-First Mode & Auth (Google/Apple) | **COMPLETED** | **100%** | Anonymous hardware UUID in secure storage, Google Sign-In data source, AuthTokens model, queued silent JWT refresh on HTTP 401, AuthBloc state machine, and profile linking. |
+| **Phase 2** | Media Picker, Preprocessor & Multipart Upload | **COMPLETED** | **100%** | ImagePickerService for Camera/Gallery, background worker isolate preprocessor (compute auto-orientation & EXIF stripping), Dio multipart upload with onSendProgress, damped job status polling, and HomeScreen upload hero UI. |
+| **Phase 3** | Studio Canvas, Split Slider & Backdrop Engine | **COMPLETED** | **100%** | ComparisonSlider with haptic center ticks and animated double-tap reset, ZoomableCanvas, BackdropSelectorBar (Transparent, Solid Colors, Studio Gradients, Custom Photo, Bokeh Blur), StudioCanvasCubit, GallerySaverService, and ShareService. |
+| **Phase 4** | Atomic Daily Quota & AdMob SSV Monetization | **READY / NEXT** | **0%** | Architecture documented in `08_MONETIZATION_ADMOB_SSV_AND_REVENUECAT.md`; backend SSV callback verified. |
 | **Phase 5** | RevenueCat In-App Purchases & Pro Paywall | **QUEUED** | **0%** | Architecture documented in `08_MONETIZATION_ADMOB_SSV_AND_REVENUECAT.md`; backend RevenueCat webhook handler verified. |
 | **Phase 6** | Drift SQLite Local History & Disk Housekeeping | **QUEUED** | **0%** | Architecture documented in `09_LOCAL_STORAGE_HISTORY_AND_CACHE.md`. |
 | **Phase 7** | Settings, Localization (i18n/RTL) & Flags | **QUEUED** | **0%** | Architecture documented in `12_LOCALIZATION_AND_INTERNATIONALIZATION.md`. |
@@ -24,56 +24,58 @@
 
 ## 2. Detailed Phase-by-Phase Checklist
 
-### Phase 0: Foundations & Project Skeleton (50% Complete)
+### Phase 0: Foundations & Project Skeleton (COMPLETED - 100%)
 - [x] Create comprehensive 17-document architectural specifications in `removeit_app/docs/`.
 - [x] Define Clean Architecture layers, Inversion of Control, and BLoC state machine guidelines.
 - [x] Design Studio Obsidian Dark palette (`#090C10`, `#7C3AED`, `#06B6D4`) and theme tokens.
 - [x] Document 10-step feature implementation workflow in `README.md`.
 - [x] Document complete phased delivery roadmap in `ROADMAP.md`.
-- [ ] Update root `pubspec.yaml` with vetted dependencies (`flutter_bloc`, `dio`, `get_it`, `drift`, `go_router`, etc.).
-- [ ] Configure strict `analysis_options.yaml` (strict casts, strict inference, zero unawaited futures).
-- [ ] Setup multi-flavor entry points: `lib/main_dev.dart`, `lib/main_staging.dart`, `lib/main_prod.dart` with `EnvConfig`.
-- [ ] Create `lib/core/theme/` (`app_colors.dart`, `studio_theme_extension.dart`, `app_theme.dart`).
-- [ ] Create `lib/core/network/` (`api_client.dart`, `auth_interceptor.dart`, `retry_interceptor.dart`).
-- [ ] Configure `lib/injection_container.dart` with `get_it`.
-- [ ] Configure `lib/core/router/app_router.dart` with `GoRouter` and bottom navigation shell.
+- [x] Update root `pubspec.yaml` with vetted production dependencies (`flutter_bloc`, `dio`, `get_it`, `drift`, `go_router`, `image_picker`, etc.).
+- [x] Configure strict `analysis_options.yaml` (strict casts, strict inference, zero unawaited futures).
+- [x] Setup multi-flavor entry points: `lib/main_dev.dart`, `lib/main_staging.dart`, `lib/main_prod.dart` with `EnvConfig`.
+- [x] Create `lib/core/theme/` (`app_colors.dart`, `app_typography.dart`, `studio_theme_extension.dart`, `app_theme.dart`).
+- [x] Create `lib/core/network/` (`api_client.dart`, `auth_interceptor.dart`, `logging_interceptor.dart`, `retry_interceptor.dart`, `network_info.dart`).
+- [x] Configure `lib/injection_container.dart` with `get_it`.
+- [x] Configure `lib/core/router/app_router.dart` with `GoRouter` and stateful bottom navigation shell.
+- [x] Verify static analysis with `flutter analyze` (zero issues).
+- [x] Verify smoke test with `flutter test` (all tests passed).
 
 ---
 
-### Phase 1: Guest Mode & Authentication (0% Complete)
-- [ ] Generate anonymous hardware-derived device UUID stored in `FlutterSecureStorage`.
-- [ ] Integrate `google_sign_in` plugin for Android and iOS.
-- [ ] Integrate `sign_in_with_apple` plugin for iOS.
-- [ ] Implement `AuthRemoteDataSource` calling `POST /api/v1/auth/google/`.
-- [ ] Implement `AuthInterceptor` with `QueuedInterceptor` for silent JWT token refresh.
-- [ ] Implement `AuthBloc` (handling Guest, Authenticated, and Profile states).
-- [ ] Create account linking dialog to claim guest quota into authenticated user account.
+### Phase 1: Guest Mode & Authentication (COMPLETED - 100%)
+- [x] Generate anonymous hardware-derived device UUID stored in `FlutterSecureStorage`.
+- [x] Integrate `google_sign_in` plugin for Android and iOS.
+- [x] Integrate `sign_in_with_apple` plugin for iOS.
+- [x] Implement `AuthRemoteDataSource` calling `POST /api/v1/auth/google/`.
+- [x] Implement `AuthInterceptor` with `QueuedInterceptor` for silent JWT token refresh.
+- [x] Implement `AuthBloc` (handling Guest, Authenticated, and Profile states).
+- [x] Create account linking logic to claim guest quota into authenticated user account.
 
 ---
 
-### Phase 2: Media Picker, Preprocessor & Multipart Upload (0% Complete)
-- [ ] Implement `ImagePickerService` for Camera and Photo Gallery selection.
-- [ ] Implement `ImagePreprocessor` background isolate (`compute`) for auto-orient, EXIF strip, and downscaling.
-- [ ] Implement `JobRemoteDataSource` with Dio multipart upload and `onSendProgress`.
-- [ ] Implement `JobProcessingBloc` handling `queued`, `running`, `preview_ready`, and error states.
-- [ ] Create `HomeScreen` upload hero UI with glowing dropzone and animated pulse scanline.
-- [ ] Verify error code handling (`QUOTA_EXHAUSTED`, `IMAGE_TOO_LARGE`, `INFERENCE_FAILED`).
+### Phase 2: Media Picker, Preprocessor & Multipart Upload (COMPLETED - 100%)
+- [x] Implement `ImagePickerService` for Camera and Photo Gallery selection.
+- [x] Implement `ImagePreprocessor` background isolate (`compute`) for auto-orient, EXIF strip, and downscaling.
+- [x] Implement `JobRemoteDataSource` with Dio multipart upload and `onSendProgress`.
+- [x] Implement `JobProcessingBloc` handling `queued`, `running`, `preview_ready`, and error states.
+- [x] Create `HomeScreen` upload hero UI with glowing dropzone and animated pulse scanline.
+- [x] Verify error code handling (`QUOTA_EXHAUSTED`, `IMAGE_TOO_LARGE`, `INFERENCE_FAILED`).
 
 ---
 
-### Phase 3: Interactive Studio Canvas & Backdrop Replacer (0% Complete)
-- [ ] Implement `ComparisonSlider` with interactive touch drag and divider thumb.
-- [ ] Wire up `HapticService.selection()` on slider center crossing.
-- [ ] Implement double-tap to reset slider with spring animation curve (`Curves.easeOutBack`).
-- [ ] Implement `ZoomableCanvas` wrapping `InteractiveViewer` (1.0x to 5.0x zoom).
-- [ ] Implement `BackdropSelectorBar` supporting:
+### Phase 3: Interactive Studio Canvas & Backdrop Replacer (COMPLETED - 100%)
+- [x] Implement `ComparisonSlider` with interactive touch drag and divider thumb.
+- [x] Wire up `HapticService.selection()` on slider center crossing.
+- [x] Implement double-tap to reset slider with spring animation curve (`Curves.easeOutBack`).
+- [x] Implement `ZoomableCanvas` wrapping `InteractiveViewer` (1.0x to 5.0x zoom).
+- [x] Implement `BackdropSelectorBar` supporting:
   - Transparent checkerboard (`#1A202C` / `#2D3748`).
   - Solid studio colors (White, Black, Off-White, Pastel Blue, Mint).
   - Studio gradients (Spotlight Violet, Soft Sunset).
   - Custom replacement background photo picker.
   - DSLR bokeh background blur.
-- [ ] Implement `GallerySaverService` compositing canvas layers and saving via `gal`.
-- [ ] Implement native OS share sheet via `share_plus`.
+- [x] Implement `GallerySaverService` compositing canvas layers and saving via `gal`.
+- [x] Implement native OS share sheet via `share_plus`.
 
 ---
 

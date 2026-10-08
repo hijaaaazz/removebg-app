@@ -35,7 +35,7 @@ class AppBottomNavScaffold extends StatelessWidget {
         ),
         child: NavigationBar(
           backgroundColor: Colors.transparent,
-          indicatorColor: AppColors.primaryViolet.withOpacity(0.2),
+          indicatorColor: AppColors.primaryViolet.withValues(alpha: 0.2),
           selectedIndex: navigationShell.currentIndex,
           onDestinationSelected: _onTap,
           destinations: const [

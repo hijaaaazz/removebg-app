@@ -30,7 +30,8 @@ class QuotaExhaustedFailure extends Failure {
 
 class MaxAdBonusesReachedFailure extends Failure {
   const MaxAdBonusesReachedFailure({
-    super.message = "You have claimed all bonus removals for today! Upgrade to Pro for unlimited removals.",
+    super.message =
+        'You have claimed all bonus removals for today! Upgrade to Pro for unlimited removals.',
     super.code = 'MAX_AD_BONUSES_REACHED',
   });
 }

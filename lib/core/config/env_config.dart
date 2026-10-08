@@ -8,6 +8,8 @@ class EnvConfig {
   final String admobBannerId;
   final String admobRewardedId;
   final String admobInterstitialId;
+  final String revenueCatAndroidKey;
+  final String revenueCatIosKey;
 
   static late EnvConfig instance;
 
@@ -19,6 +21,8 @@ class EnvConfig {
     required this.admobBannerId,
     required this.admobRewardedId,
     required this.admobInterstitialId,
+    required this.revenueCatAndroidKey,
+    required this.revenueCatIosKey,
   });
 
   static void initialize({
@@ -29,6 +33,8 @@ class EnvConfig {
     required String admobBannerId,
     required String admobRewardedId,
     required String admobInterstitialId,
+    String revenueCatAndroidKey = 'goog_sample_key_android',
+    String revenueCatIosKey = 'appl_sample_key_ios',
   }) {
     instance = EnvConfig._(
       flavor: flavor,
@@ -38,6 +44,8 @@ class EnvConfig {
       admobBannerId: admobBannerId,
       admobRewardedId: admobRewardedId,
       admobInterstitialId: admobInterstitialId,
+      revenueCatAndroidKey: revenueCatAndroidKey,
+      revenueCatIosKey: revenueCatIosKey,
     );
   }
 

@@ -1,0 +1,52 @@
+Running `(cd /Users/hijazc/.pub-cache/hosted/pub.dev/objective_c-9.5.0/; ANDROID_HOME=/Users/hijazc/Library/Android/sdk TMPDIR=/var/folders/xp/fp9ngjqs33x69m8vzstcjfz80000gn/T/ PATH=/Applications/Xcode.app/Contents/SharedFrameworks/SwiftBuild.framework/Versions/A/PlugIns/SWBBuildService.bundle/Contents/PlugIns/SWBUniversalPlatformPlugin.bundle/Contents/Frameworks/SWBUniversalPlatform.framework/Resources:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/local/bin:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/libexec:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/usr/bin:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/usr/local/bin:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/local/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/local/bin:/Users/hijazc/.antigravity-ide/antigravity-ide/bin:/Users/hijazc/.antigravity/antigravity/bin:/Users/hijazc/.rbenv/shims:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/Users/hijazc/development/flutter/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/Users/hijazc/Library/Android/sdk/platform-tools:/Users/hijazc/.pub-cache/bin HOME=/Users/hijazc /Users/hijazc/development/flutter/bin/cache/dart-sdk/bin/dart --packages=/Users/hijazc/hijazc/removeit_app/.dart_tool/package_config.json /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/objective_c/9f22e6a04e7d57ddc53af6565b2f38d4/hook.dill --config=/Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/objective_c/9f22e6a04e7d57ddc53af6565b2f38d4/input.json )`.
+INFO: 2026-10-08 10:35:09.013042: Using compiler /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang from BuildInput.cCompiler.cc.
+
+INFO: 2026-10-08 10:35:09.015794: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -target arm64-apple-ios-simulator -mios-version-min=12 -c /Users/hijazc/.pub-cache/hosted/pub.dev/objective_c-9.5.0/src/include/dart_api_dl.c -fpic -gline-tables-only -I src -o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/include/dart_api_dl.c.o
+
+INFO: 2026-10-08 10:35:09.016761: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -target arm64-apple-ios-simulator -mios-version-min=12 -c /Users/hijazc/.pub-cache/hosted/pub.dev/objective_c-9.5.0/src/objective_c.c -fpic -gline-tables-only -I src -o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c.c.o
+
+INFO: 2026-10-08 10:35:09.017: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -target arm64-apple-ios-simulator -mios-version-min=12 -x objective-c -fobjc-arc -c /Users/hijazc/.pub-cache/hosted/pub.dev/objective_c-9.5.0/src/input_stream_adapter.m -fpic -gline-tables-only -I src -o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/input_stream_adapter.m.o
+
+INFO: 2026-10-08 10:35:09.017236: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -target arm64-apple-ios-simulator -mios-version-min=12 -x objective-c -fobjc-arc -c /Users/hijazc/.pub-cache/hosted/pub.dev/objective_c-9.5.0/src/objective_c.m -fpic -gline-tables-only -I src -o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c.m.o
+
+INFO: 2026-10-08 10:35:09.017340: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -target arm64-apple-ios-simulator -mios-version-min=12 -x objective-c -fobjc-arc -c /Users/hijazc/.pub-cache/hosted/pub.dev/objective_c-9.5.0/src/observer.m -fpic -gline-tables-only -I src -o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/observer.m.o
+
+
+
+INFO: 2026-10-08 10:35:09.017517: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -target arm64-apple-ios-simulator -mios-version-min=12 -x objective-c -fobjc-arc -c /Users/hijazc/.pub-cache/hosted/pub.dev/objective_c-9.5.0/src/protocol.m -fpic -gline-tables-only -I src -o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/protocol.m.o
+
+INFO: 2026-10-08 10:35:09.017601: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -target arm64-apple-ios-simulator -mios-version-min=12 -x objective-c -fobjc-arc -c /Users/hijazc/.pub-cache/hosted/pub.dev/objective_c-9.5.0/src/objective_c_bindings_generated.m -fpic -gline-tables-only -I src -o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c_bindings_generated.m.o
+
+INFO: 2026-10-08 10:35:09.156182: 
+INFO: 2026-10-08 10:35:09.156250: 
+INFO: 2026-10-08 10:35:09.156274: Generated /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/include/dart_api_dl.c.o
+
+INFO: 2026-10-08 10:35:09.159032: 
+INFO: 2026-10-08 10:35:09.159062: 
+INFO: 2026-10-08 10:35:09.159073: Generated /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c.c.o
+INFO: 2026-10-08 10:35:09.159149: 
+INFO: 2026-10-08 10:35:09.159160: 
+INFO: 2026-10-08 10:35:09.159168: Generated /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/observer.m.o
+
+INFO: 2026-10-08 10:35:09.159956: 
+INFO: 2026-10-08 10:35:09.160064: 
+INFO: 2026-10-08 10:35:09.160098: Generated /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/protocol.m.o
+
+INFO: 2026-10-08 10:35:09.311081: 
+INFO: 2026-10-08 10:35:09.311123: 
+INFO: 2026-10-08 10:35:09.311133: Generated /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/ns_number.m.o
+INFO: 2026-10-08 10:35:09.320516: 
+INFO: 2026-10-08 10:35:09.320551: 
+INFO: 2026-10-08 10:35:09.320561: Generated /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c.m.o
+INFO: 2026-10-08 10:35:09.321470: 
+INFO: 2026-10-08 10:35:09.321497: 
+INFO: 2026-10-08 10:35:09.321507: Generated /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/input_stream_adapter.m.o
+INFO: 2026-10-08 10:35:09.356881: 
+INFO: 2026-10-08 10:35:09.356913: 
+INFO: 2026-10-08 10:35:09.356922: Generated /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c_bindings_generated.m.o
+INFO: 2026-10-08 10:35:09.357183: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -shared -Wl,-encryptable -undefined dynamic_lookup -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -target arm64-apple-ios-simulator -mios-version-min=12 /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/include/dart_api_dl.c.o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c.c.o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/input_stream_adapter.m.o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c.m.o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/observer.m.o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/ns_number.m.o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/protocol.m.o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/obj/src/objective_c_bindings_generated.m.o -o /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/objective_c.dylib
+INFO: 2026-10-08 10:35:09.419236: 
+INFO: 2026-10-08 10:35:09.419291: ld: warning: -undefined dynamic_lookup is deprecated on iOS-simulator
+
+INFO: 2026-10-08 10:35:09.419312: Generated /Users/hijazc/hijazc/removeit_app/.dart_tool/hooks_runner/shared/objective_c/build/9f22e6a04e/objective_c.dylib
+

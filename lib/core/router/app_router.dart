@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:removeit_app/core/router/route_names.dart';
@@ -51,7 +52,8 @@ class AppRouter {
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) {
           final jobId = state.uri.queryParameters['jobId'] ?? '';
-          return StudioCanvasScreen(jobId: jobId);
+          final extraFile = state.extra is File ? state.extra as File : null;
+          return StudioCanvasScreen(jobId: jobId, originalFile: extraFile);
         },
       ),
       GoRoute(

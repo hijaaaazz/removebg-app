@@ -8,13 +8,13 @@ class HapticService {
 
   static Future<void> successPattern() async {
     await HapticFeedback.mediumImpact();
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future<void>.delayed(const Duration(milliseconds: 100));
     await HapticFeedback.lightImpact();
   }
 
   static Future<void> warningPattern() async {
     await HapticFeedback.heavyImpact();
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future<void>.delayed(const Duration(milliseconds: 100));
     await HapticFeedback.heavyImpact();
   }
 }

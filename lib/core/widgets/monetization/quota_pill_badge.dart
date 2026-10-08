@@ -24,10 +24,10 @@ class QuotaPillBadge extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isPro ? AppColors.proGold.withOpacity(0.15) : AppColors.surfaceDark,
+          color: isPro ? AppColors.proGold.withValues(alpha: 0.15) : AppColors.surfaceDark,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isPro ? AppColors.proGold.withOpacity(0.4) : AppColors.surfaceBorder,
+            color: isPro ? AppColors.proGold.withValues(alpha: 0.4) : AppColors.surfaceBorder,
             width: 1,
           ),
         ),

@@ -46,7 +46,7 @@ class GlowButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: baseColor,
-          disabledBackgroundColor: baseColor.withOpacity(0.4),
+          disabledBackgroundColor: baseColor.withValues(alpha: 0.4),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           elevation: 0,

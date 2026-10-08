@@ -32,8 +32,7 @@
         "purchases_flutter",
         "share_plus",
         "shared_preferences",
-        "sign_in_with_apple",
-        "sqlite3_flutter_libs"
+        "sign_in_with_apple"
       ],
       "devDependencies": [
         "bloc_test",
@@ -342,13 +341,6 @@
         "path_provider_linux",
         "path_provider_platform_interface",
         "path_provider_windows"
-      ]
-    },
-    {
-      "name": "sqlite3_flutter_libs",
-      "version": "0.5.42",
-      "dependencies": [
-        "flutter"
       ]
     },
     {
