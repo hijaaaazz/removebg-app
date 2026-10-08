@@ -18,37 +18,13 @@ class QuotaRepositoryImpl implements QuotaRepository {
     try {
       final quota = await remoteDataSource.getUserQuota();
       final isPro = await revenueCatDataSource.isUserPro();
-      if (isPro) {
+      if (isPro && !quota.isPro) {
         return Right(quota.copyWith(plan: 'pro'));
       }
       return Right(quota);
     } on DioException catch (e) {
-      final isPro = await revenueCatDataSource.isUserPro();
-      if (isPro) {
-        return const Right(UserQuotaEntity(
-          plan: 'pro',
-          baseLimit: 9999,
-          adBonusGranted: 0,
-          totalAllowed: 9999,
-          used: 0,
-          remaining: 9999,
-          bonusAdsRemainingToday: 0,
-        ));
-      }
       return Left(ErrorHandler.handleDioError(e));
     } catch (e) {
-      final isPro = await revenueCatDataSource.isUserPro();
-      if (isPro) {
-        return const Right(UserQuotaEntity(
-          plan: 'pro',
-          baseLimit: 9999,
-          adBonusGranted: 0,
-          totalAllowed: 9999,
-          used: 0,
-          remaining: 9999,
-          bonusAdsRemainingToday: 0,
-        ));
-      }
       return Left(ServerFailure(message: e.toString()));
     }
   }

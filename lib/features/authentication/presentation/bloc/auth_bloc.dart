@@ -5,6 +5,8 @@ import 'package:removeit_app/features/authentication/domain/usecases/sign_in_wit
 import 'package:removeit_app/features/authentication/domain/usecases/sign_out_usecase.dart';
 import 'package:removeit_app/features/authentication/presentation/bloc/auth_event.dart';
 import 'package:removeit_app/features/authentication/presentation/bloc/auth_state.dart';
+import 'package:removeit_app/features/monetization/data/datasources/revenuecat_data_source.dart';
+import 'package:removeit_app/injection_container.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final GetCurrentUserUseCase getCurrentUserUseCase;
@@ -41,6 +43,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           if (user.isGuest) {
             emit(AuthGuestState(user));
           } else {
+            await sl<RevenueCatDataSource>().logIn(user.id);
             emit(AuthAuthenticatedState(user));
           }
         } else {
@@ -57,15 +60,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onSignInWithGoogle(SignInWithGoogleEvent event, Emitter<AuthState> emit) async {
     emit(const AuthLoadingState());
     final result = await signInWithGoogleUseCase(event.idToken);
-    result.fold(
-      (failure) => emit(AuthErrorState(failure.message)),
-      (user) => emit(AuthAuthenticatedState(user)),
+    await result.fold(
+      (failure) async => emit(AuthErrorState(failure.message)),
+      (user) async {
+        // Link Django user UUID with RevenueCat
+        await sl<RevenueCatDataSource>().logIn(user.id);
+        emit(AuthAuthenticatedState(user));
+      },
     );
   }
 
   Future<void> _onSignOut(SignOutEvent event, Emitter<AuthState> emit) async {
     emit(const AuthLoadingState());
     await signOutUseCase();
+    await sl<RevenueCatDataSource>().logOut(); // Reset RevenueCat identity
     final guestResult = await initializeGuestUseCase();
     guestResult.fold(
       (failure) => emit(AuthErrorState(failure.message)),

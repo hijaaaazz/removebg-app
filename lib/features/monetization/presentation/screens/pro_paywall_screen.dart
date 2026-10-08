@@ -269,6 +269,26 @@ class _ProPaywallScreenContent extends StatelessWidget {
       selectedId = state.selectedPackageId ?? '';
     }
 
+    if (packages.isEmpty) {
+      return [
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceDark,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.surfaceBorder),
+          ),
+          child: const Center(
+            child: Text(
+              'No store packages available right now.',
+              style: TextStyle(color: AppColors.textSecondaryDark, fontSize: 13),
+            ),
+          ),
+        ),
+      ];
+    }
+
     return packages.map((pkg) {
       final isSelected = pkg.id == selectedId;
       return GestureDetector(

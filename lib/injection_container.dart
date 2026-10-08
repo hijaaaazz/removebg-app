@@ -116,7 +116,7 @@ Future<void> initInjection() async {
       ));
 
   // 5. RevenueCat In-App Purchases Feature
-  sl.registerLazySingleton<RevenueCatDataSource>(() => RevenueCatDataSourceImpl(sl()));
+  sl.registerLazySingleton<RevenueCatDataSource>(() => RevenueCatDataSourceImpl());
   sl.registerLazySingleton<MonetizationRepository>(() => MonetizationRepositoryImpl(sl()));
   sl.registerLazySingleton<GetOfferingsUseCase>(() => GetOfferingsUseCase(sl()));
   sl.registerLazySingleton<PurchasePackageUseCase>(() => PurchasePackageUseCase(sl()));
