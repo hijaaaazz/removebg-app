@@ -14,6 +14,7 @@ class EnvConfig {
   final String revenueCatAndroidKey;
   final String revenueCatIosKey;
   final String googleServerClientId;
+  final String googleIosClientId;
 
   static late EnvConfig instance;
 
@@ -29,6 +30,7 @@ class EnvConfig {
     required this.revenueCatAndroidKey,
     required this.revenueCatIosKey,
     required this.googleServerClientId,
+    required this.googleIosClientId,
   });
 
   /// Production-grade asynchronous bootstrap loading from .env files and compile-time defines.
@@ -93,6 +95,7 @@ class EnvConfig {
       revenueCatAndroidKey: getEnv('REVENUECAT_ANDROID_KEY', defaultValue: 'goog_sample_key_android'),
       revenueCatIosKey: getEnv('REVENUECAT_IOS_KEY', defaultValue: 'appl_sample_key_ios'),
       googleServerClientId: getEnv('GOOGLE_SERVER_CLIENT_ID', defaultValue: ''),
+      googleIosClientId: getEnv('GOOGLE_IOS_CLIENT_ID', defaultValue: '429257074599-if1rckn5417kcj2p1f3lva4pujeh32v5.apps.googleusercontent.com'),
     );
   }
 
@@ -109,6 +112,7 @@ class EnvConfig {
     String revenueCatAndroidKey = 'goog_sample_key_android',
     String revenueCatIosKey = 'appl_sample_key_ios',
     String googleServerClientId = '',
+    String googleIosClientId = '429257074599-if1rckn5417kcj2p1f3lva4pujeh32v5.apps.googleusercontent.com',
   }) {
     instance = EnvConfig._(
       flavor: flavor,
@@ -122,6 +126,7 @@ class EnvConfig {
       revenueCatAndroidKey: revenueCatAndroidKey,
       revenueCatIosKey: revenueCatIosKey,
       googleServerClientId: googleServerClientId,
+      googleIosClientId: googleIosClientId,
     );
   }
 

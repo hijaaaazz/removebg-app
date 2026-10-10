@@ -124,3 +124,12 @@ class AuthInterceptor extends QueuedInterceptor {
 ### 4.3 Client-Side Privacy Sanitization
 - **EXIF Stripping:** GPS coordinates, camera serial numbers, and device metadata are stripped locally before an image is dispatched over the wire.
 - **Auto-Eviction of Temp Files:** Downscaled intermediate files in the app cache are wiped immediately after the network stream completes.
+
+### 4.4 Sign-Out Protocol & Zero-Leak Data Hygiene
+When an authenticated user chooses to sign out:
+1. **Explicit Confirmation Modal:** A confirmation dialog (`SignOutConfirmationDialog`) is displayed to avoid accidental session termination, warning the user that session cutouts will be purged from this device.
+2. **Local SQLite Purge (`clearAllHistory`):** To prevent personal photos from being viewed by guest creators or subsequent users, all local SQLite `JobHistoryTable` rows are immediately wiped.
+3. **Decoded Image Cache Eviction:** `PaintingBinding.instance.imageCache.clear()` and `clearLiveImages()` are invoked to prevent previously decoded bitmap memory leaks.
+4. **Third-Party Identity Reset:** RevenueCat is logged out (`logOut()`), and Google Sign-In SDK session is detached.
+5. **Fresh Guest Session Bootstrap:** The device is reset to a clean guest creator state with 0 local cutouts.
+

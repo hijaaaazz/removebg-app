@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:removeit_app/core/error/error_handler.dart';
 import 'package:removeit_app/core/error/failures.dart';
+import 'package:removeit_app/core/services/google_auth_service.dart';
 import 'package:removeit_app/features/authentication/data/datasources/auth_local_data_source.dart';
 import 'package:removeit_app/features/authentication/data/datasources/auth_remote_data_source.dart';
 import 'package:removeit_app/features/authentication/data/models/user_model.dart';
@@ -11,10 +12,12 @@ import 'package:removeit_app/features/authentication/domain/repositories/auth_re
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
   final AuthLocalDataSource localDataSource;
+  final GoogleAuthService googleAuthService;
 
   AuthRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
+    required this.googleAuthService,
   });
 
   @override
@@ -70,6 +73,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, void>> signOut() async {
     try {
+      await googleAuthService.signOut();
       await localDataSource.clearAuthSession();
       // Re-initialize guest user so the app remains fully functional
       await initializeGuestSession();

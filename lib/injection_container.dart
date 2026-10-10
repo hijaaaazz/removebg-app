@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -77,6 +78,7 @@ Future<void> initInjection() async {
       ));
   sl.registerLazySingleton<ImagePickerService>(() => ImagePickerService());
   sl.registerLazySingleton<GoogleAuthService>(() => GoogleAuthService(
+        clientId: Platform.isIOS ? EnvConfig.instance.googleIosClientId : null,
         serverClientId: EnvConfig.instance.googleServerClientId.isNotEmpty
             ? EnvConfig.instance.googleServerClientId
             : null,
@@ -91,6 +93,7 @@ Future<void> initInjection() async {
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(
         remoteDataSource: sl(),
         localDataSource: sl(),
+        googleAuthService: sl(),
       ));
   sl.registerLazySingleton<GetCurrentUserUseCase>(() => GetCurrentUserUseCase(sl()));
   sl.registerLazySingleton<InitializeGuestUseCase>(() => InitializeGuestUseCase(sl()));

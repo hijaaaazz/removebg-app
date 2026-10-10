@@ -1,3 +1,4 @@
+import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:removeit_app/features/authentication/domain/usecases/get_current_user_usecase.dart';
 import 'package:removeit_app/features/authentication/domain/usecases/initialize_guest_usecase.dart';
@@ -5,6 +6,7 @@ import 'package:removeit_app/features/authentication/domain/usecases/sign_in_wit
 import 'package:removeit_app/features/authentication/domain/usecases/sign_out_usecase.dart';
 import 'package:removeit_app/features/authentication/presentation/bloc/auth_event.dart';
 import 'package:removeit_app/features/authentication/presentation/bloc/auth_state.dart';
+import 'package:removeit_app/features/history/domain/repositories/history_repository.dart';
 import 'package:removeit_app/features/monetization/data/datasources/revenuecat_data_source.dart';
 import 'package:removeit_app/injection_container.dart';
 
@@ -74,6 +76,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(const AuthLoadingState());
     await signOutUseCase();
     await sl<RevenueCatDataSource>().logOut(); // Reset RevenueCat identity
+
+    // Clear local SQLite cutout history to ensure zero privacy leaks across accounts
+    await sl<HistoryRepository>().clearAllHistory();
+
+    // Evict decoded cutouts from memory
+    PaintingBinding.instance.imageCache.clear();
+    PaintingBinding.instance.imageCache.clearLiveImages();
+
     final guestResult = await initializeGuestUseCase();
     guestResult.fold(
       (failure) => emit(AuthErrorState(failure.message)),

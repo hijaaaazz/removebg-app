@@ -252,3 +252,5 @@ class _PreprocessInput {
 | **Local Database** | Drift (SQLite ORM) | Compile-time type-safety, relational schema for job history, fast reactive queries. |
 | **Routing** | GoRouter | Declarative URL-based routes, stateful nested navigation, deep-linking support. |
 | **Monetization** | Google AdMob + RevenueCat | AdMob SSV cryptographic security for free tier; RevenueCat cross-platform IAP for Pro. |
+| **Code Modularity** | < 300 Lines Rule | Strict modular decomposition; screen files are thin orchestrators with zero monolithic widgets. |
+

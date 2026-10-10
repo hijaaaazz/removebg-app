@@ -48,7 +48,7 @@
 
 	<!-- Google Sign-In (iOS OAuth Client) -->
 	<key>GIDClientID</key>
-	<string>429257074599-2mi6fopabkkqas20lak9bfvn2aeemj6u.apps.googleusercontent.com</string>
+	<string>429257074599-if1rckn5417kcj2p1f3lva4pujeh32v5.apps.googleusercontent.com</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -56,7 +56,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.429257074599-2mi6fopabkkqas20lak9bfvn2aeemj6u</string>
+				<string>com.googleusercontent.apps.429257074599-if1rckn5417kcj2p1f3lva4pujeh32v5</string>
 			</array>
 		</dict>
 	</array>

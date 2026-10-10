@@ -4,10 +4,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 class GoogleAuthService {
   final GoogleSignIn _googleSignIn;
 
-  GoogleAuthService({String? serverClientId})
+  GoogleAuthService({String? clientId, String? serverClientId})
       : _googleSignIn = GoogleSignIn(
-          scopes: ['email', 'profile'],
+          clientId: (clientId != null && clientId.isNotEmpty) ? clientId : null,
           serverClientId: (serverClientId != null && serverClientId.isNotEmpty) ? serverClientId : null,
+          scopes: ['email', 'profile'],
         );
 
   Future<String?> signInAndGetIdToken() async {

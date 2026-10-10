@@ -18,9 +18,21 @@ class AppColors {
   static const Color accentCyan = Color(0xFF06B6D4);
   static const Color accentCyanLight = Color(0xFF22D3EE);
 
-  // Monetization & Pro Accents
-  static const Color proGold = Color(0xFFF59E0B);
-  static const Color proGoldLight = Color(0xFFFBBF24);
+  // Monetization & Pro Accents & Golden Brand Identity
+  static const Color proGold = Color(0xFFF5BA13);
+  static const Color proGoldLight = Color(0xFFFFD54F);
+  static const Color goldPrimary = Color(0xFFFFB800);
+  static const Color goldAccent = Color(0xFFF5A623);
+  static const Color goldLight = Color(0xFFFFD54F);
+  static const Color goldDark = Color(0xFFC69200);
+  static const Color goldGlow = Color(0x66FFB800);
+
+  // Modern Studio Dark Surfaces (Reference UI)
+  static const Color studioBlack = Color(0xFF0C0C0E);
+  static const Color studioCard = Color(0xFF16161A);
+  static const Color studioCardElevated = Color(0xFF1E1E24);
+  static const Color studioBorder = Color(0xFF282830);
+  static const Color studioBorderSubtle = Color(0xFF1F1F26);
 
   // Semantic Feedback
   static const Color successEmerald = Color(0xFF10B981);

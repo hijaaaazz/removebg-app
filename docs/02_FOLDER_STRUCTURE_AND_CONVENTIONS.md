@@ -192,3 +192,24 @@ Consistency across files, classes, and variables guarantees that any engineer ca
 - **Value Equality with `Equatable`**: All Entities, Events, States, and DTOs must extend `Equatable` and implement `List<Object?> get props`.
 - **`const` Constructors Everywhere**: Use `const` constructors for all immutable classes and stateless widgets to minimize unnecessary Flutter element rebuilds.
 - **Strict Typing**: Never use `dynamic`. Explicitly type all collection literals and generic parameters (`Map<String, dynamic>`, `List<JobEntity>`).
+
+---
+
+## 5. File Size Limits & Modular Widget Decomposition (< 300 Lines Rule)
+
+Professional production codebases reject monolithic multi-hundred-line "god files". RemoveIt enforces a strict architectural rule:
+
+### 5.1 The 300-Line Maximum Ceiling
+- **Hard Rule**: No individual Dart source file (`*.dart`) may exceed **300 lines of code**.
+- **Screens as Lean Orchestrators**: Screen files (`*_screen.dart`) must act solely as thin coordinators—binding BLoC providers, listening to high-level states, orchestrating lifecycle, and mounting layout sections.
+- **Sub-Widget Extraction**: Any distinct visual block, card, modal sheet, or complex layout section must be extracted into its own focused widget under `features/<feature>/presentation/widgets/`.
+- **Custom Painters & Clippers**: Custom painting algorithms (`CustomPainter`) and clipping geometries (`CustomClipper`) must reside in dedicated, testable widget files rather than being appended at the end of screen files.
+
+### 5.2 Verification Checklist
+| File Category | Target Line Count | Max Ceiling | Prohibited Patterns |
+| :--- | :--- | :--- | :--- |
+| **Screens** (`*_screen.dart`) | 80 – 200 lines | 300 lines | Inlining custom painters, sheets, complex cards |
+| **Feature Widgets** (`*_widget.dart`, `*_card.dart`) | 60 – 180 lines | 250 lines | Embedding multiple unrelated components |
+| **BLoCs / Cubits** (`*_bloc.dart`) | 80 – 200 lines | 300 lines | Inlining raw HTTP or DB calls |
+| **Data Sources / Repositories** | 80 – 220 lines | 300 lines | Multi-entity CRUD conglomerations |
+

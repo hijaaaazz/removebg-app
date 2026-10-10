@@ -7,16 +7,19 @@ import 'package:removeit_app/core/router/route_names.dart';
 import 'package:removeit_app/core/services/haptic_service.dart';
 import 'package:removeit_app/core/services/image_picker_service.dart';
 import 'package:removeit_app/core/theme/app_colors.dart';
-import 'package:removeit_app/core/utils/context_extensions.dart';
 import 'package:removeit_app/core/widgets/buttons/glow_button.dart';
 import 'package:removeit_app/core/widgets/layout/studio_scaffold.dart';
-import 'package:removeit_app/core/widgets/monetization/quota_pill_badge.dart';
 import 'package:removeit_app/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:removeit_app/features/authentication/presentation/bloc/auth_state.dart';
 import 'package:removeit_app/features/authentication/presentation/widgets/sign_in_prompt_sheet.dart';
 import 'package:removeit_app/features/image_processing/presentation/bloc/job_processing_bloc.dart';
 import 'package:removeit_app/features/image_processing/presentation/bloc/job_processing_event.dart';
 import 'package:removeit_app/features/image_processing/presentation/bloc/job_processing_state.dart';
+import 'package:removeit_app/features/image_processing/presentation/widgets/image_source_picker_sheet.dart';
+import 'package:removeit_app/features/image_processing/presentation/widgets/studio_header.dart';
+import 'package:removeit_app/features/image_processing/presentation/widgets/studio_hero_headline.dart';
+import 'package:removeit_app/features/image_processing/presentation/widgets/studio_hero_showcase.dart';
+import 'package:removeit_app/features/image_processing/presentation/widgets/studio_interactive_scanner.dart';
 import 'package:removeit_app/features/monetization/data/datasources/admob_data_source.dart';
 import 'package:removeit_app/features/quota/presentation/bloc/quota_bloc.dart';
 import 'package:removeit_app/features/quota/presentation/bloc/quota_event.dart';
@@ -42,14 +45,35 @@ class _HomeScreenContent extends StatefulWidget {
   State<_HomeScreenContent> createState() => _HomeScreenContentState();
 }
 
-class _HomeScreenContentState extends State<_HomeScreenContent> {
+class _HomeScreenContentState extends State<_HomeScreenContent>
+    with SingleTickerProviderStateMixin {
   bool _isPickingImage = false;
+  File? _selectedFile;
+  late AnimationController _scanController;
 
   @override
   void initState() {
     super.initState();
-    // Preload rewarded ad in the background for 0ms instantaneous display
+    // Preload rewarded ad in the background for instantaneous display
     sl<AdMobDataSource>().preloadRewardedAd();
+
+    // Controller for the animated scan line effect
+    _scanController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2200),
+    );
+    // Don't run infinite animation in widget test environment to allow pumpAndSettle
+    if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      _scanController.repeat(reverse: true);
+    } else {
+      _scanController.value = 0.5;
+    }
+  }
+
+  @override
+  void dispose() {
+    _scanController.dispose();
+    super.dispose();
   }
 
   Future<void> _pickImage(BuildContext context, ImagePickerSource source) async {
@@ -66,6 +90,7 @@ class _HomeScreenContentState extends State<_HomeScreenContent> {
     }
     if (file == null || !context.mounted) return;
     final selectedFile = file;
+    setState(() => _selectedFile = selectedFile);
 
     final authState = context.read<AuthBloc>().state;
     final isAuthenticated = authState is AuthAuthenticatedState;
@@ -111,6 +136,7 @@ class _HomeScreenContentState extends State<_HomeScreenContent> {
       },
       onAdCancelled: () {
         if (!context.mounted) return;
+        setState(() => _selectedFile = null);
         // User closed/cancelled the ad early: DO NOT CALL SERVER!
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -137,37 +163,16 @@ class _HomeScreenContentState extends State<_HomeScreenContent> {
     );
   }
 
+  void _showImageSourcePicker(BuildContext context) {
+    ImageSourcePickerSheet.show(
+      context,
+      onSourceSelected: (source) => _pickImage(context, source),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return StudioScaffold(
-      appBar: AppBar(
-        title: const Text('RemoveIt Studio'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: BlocBuilder<QuotaBloc, QuotaState>(
-              builder: (context, quotaState) {
-                int remaining = 0;
-                bool isPro = false;
-
-                if (quotaState is QuotaLoadedState) {
-                  remaining = quotaState.quota.remaining;
-                  isPro = quotaState.quota.isPro;
-                } else if (quotaState is QuotaExhaustedState) {
-                  remaining = 0;
-                  isPro = false;
-                }
-
-                return QuotaPillBadge(
-                  remaining: remaining,
-                  isPro: isPro,
-                  onTap: () => context.push(RouteNames.paywall),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
       body: BlocConsumer<JobProcessingBloc, JobProcessingState>(
         listener: (context, state) async {
           if (state is JobPreviewReadyState) {
@@ -179,10 +184,12 @@ class _HomeScreenContentState extends State<_HomeScreenContent> {
               extra: state.originalFile,
             );
             if (context.mounted) {
+              setState(() => _selectedFile = null);
               context.read<JobProcessingBloc>().add(const ResetJobEvent());
             }
           } else if (state is JobErrorState) {
             await HapticService.warningPattern();
+            setState(() => _selectedFile = null);
             if (!context.mounted) return;
             if (state.errorCode == 'UNAUTHENTICATED') {
               unawaited(SignInPromptSheet.show(context));
@@ -209,164 +216,52 @@ class _HomeScreenContentState extends State<_HomeScreenContent> {
           final isProcessing = state is JobCompressingState ||
               state is JobUploadingState ||
               state is JobProcessingOnServerState;
-          final isBusy = isProcessing || _isPickingImage;
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Spacer(),
-                // Dropzone Hero or Processing State
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 44, horizontal: 24),
-                  decoration: BoxDecoration(
-                    color: AppColors.surfaceDark,
-                    borderRadius: BorderRadius.circular(28),
-                    border: Border.all(
-                      color: isProcessing ? AppColors.accentCyan : AppColors.surfaceBorder,
-                      width: 1.5,
+          if (isProcessing) {
+            return StudioInteractiveScanner(
+              selectedFile: _selectedFile,
+              scanAnimation: _scanController,
+              state: state,
+              onCancel: () {
+                setState(() => _selectedFile = null);
+                context.read<JobProcessingBloc>().add(const ResetJobEvent());
+              },
+            );
+          }
+
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 6),
+                  const StudioHeader(),
+                  const SizedBox(height: 14),
+                  Expanded(
+                    child: StudioHeroShowcase(
+                      scanAnimation: _scanController,
+                      onTap: () => _showImageSourcePicker(context),
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: (isProcessing ? AppColors.accentCyan : AppColors.primaryViolet)
-                            .withValues(alpha: 0.12),
-                        blurRadius: 32,
-                        spreadRadius: 4,
-                      ),
-                    ],
                   ),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: isProcessing
-                        ? _buildProcessingView(state)
-                        : _buildUploadIdleView(context),
+                  const SizedBox(height: 16),
+                  const StudioHeroHeadline(),
+                  const SizedBox(height: 16),
+                  GlowButton(
+                    label: 'Start with Photo',
+                    icon: Icons.add_photo_alternate_rounded,
+                    variant: GlowButtonVariant.proGold,
+                    borderRadius: 28,
+                    isLoading: _isPickingImage,
+                    onPressed: () => _showImageSourcePicker(context),
                   ),
-                ),
-                const Spacer(),
-
-                // Action Buttons
-                GlowButton(
-                  label: 'Select Photo from Gallery',
-                  icon: Icons.photo_library_rounded,
-                  isLoading: isBusy,
-                  onPressed: isBusy
-                      ? null
-                      : () => _pickImage(context, ImagePickerSource.gallery),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 54),
-                    foregroundColor: Colors.white,
-                    side: const BorderSide(color: AppColors.surfaceBorder, width: 1),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  ),
-                  onPressed: isBusy
-                      ? null
-                      : () => _pickImage(context, ImagePickerSource.camera),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.camera_alt_rounded, size: 20, color: AppColors.textSecondaryDark),
-                      SizedBox(width: 8),
-                      Text(
-                        'Take Photo with Camera',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
+                  const SizedBox(height: 14),
+                ],
+              ),
             ),
           );
         },
       ),
-    );
-  }
-
-  Widget _buildUploadIdleView(BuildContext context) {
-    return Column(
-      key: const ValueKey('idle_view'),
-      children: [
-        Container(
-          width: 76,
-          height: 76,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppColors.primaryViolet.withValues(alpha: 0.15),
-            border: Border.all(
-              color: AppColors.primaryViolet.withValues(alpha: 0.3),
-              width: 1,
-            ),
-          ),
-          child: const Icon(
-            Icons.add_photo_alternate_rounded,
-            color: AppColors.primaryVioletLight,
-            size: 38,
-          ),
-        ),
-        const SizedBox(height: 24),
-        Text(
-          'Remove Background Instantly',
-          style: context.textTheme.headlineMedium,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Select any portrait or product photo to isolate subjects with studio precision.',
-          style: context.textTheme.bodyMedium,
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildProcessingView(JobProcessingState state) {
-    String title = 'Processing Image...';
-    String subtitle = 'Isolating subjects with BiRefNet AI';
-    double? progressValue;
-
-    if (state is JobCompressingState) {
-      title = 'Optimizing Photo...';
-      subtitle = 'Downscaling and stripping metadata off-thread';
-    } else if (state is JobUploadingState) {
-      title = 'Uploading Image...';
-      subtitle = 'Sending bytes to inference worker';
-      progressValue = state.progress;
-    } else if (state is JobProcessingOnServerState) {
-      title = 'Removing Background...';
-      subtitle = 'BiRefNet neural network is segmenting the subject';
-    }
-
-    return Column(
-      key: const ValueKey('processing_view'),
-      children: [
-        SizedBox(
-          width: 64,
-          height: 64,
-          child: CircularProgressIndicator(
-            value: progressValue,
-            strokeWidth: 3,
-            color: AppColors.accentCyan,
-            backgroundColor: AppColors.surfaceBorder,
-          ),
-        ),
-        const SizedBox(height: 24),
-        Text(
-          title,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          subtitle,
-          style: const TextStyle(fontSize: 13, color: AppColors.textSecondaryDark),
-          textAlign: TextAlign.center,
-        ),
-      ],
     );
   }
 }
